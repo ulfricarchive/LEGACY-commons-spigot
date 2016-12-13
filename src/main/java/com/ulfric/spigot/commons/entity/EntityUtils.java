@@ -25,14 +25,14 @@ public class EntityUtils {
 		entity.setHealth(0);
 	}
 
-	public static EntityDamageEvent newDamageEvent(Entity entity, double amount)
+	private static EntityDamageEvent newDamageEvent(Entity entity, double amount)
 	{
 		Objects.requireNonNull(entity);
 
 		return EntityUtils.newDamageEvent(entity, amount, EntityDamageEvent.DamageCause.CUSTOM);
 	}
 
-	public static EntityDamageEvent newDamageEvent(Entity entity, double amount,
+	private static EntityDamageEvent newDamageEvent(Entity entity, double amount,
 			EntityDamageEvent.DamageCause cause)
 	{
 		Objects.requireNonNull(entity);

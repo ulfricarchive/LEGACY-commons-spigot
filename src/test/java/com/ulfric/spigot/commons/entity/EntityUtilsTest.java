@@ -8,11 +8,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
-import com.ulfric.commons.api.UtilTest;
 import com.ulfric.verify.Verify;
 
 @RunWith(JUnitPlatform.class)
-class EntityUtilsTest extends UtilTest<EntityUtils> {
+class EntityUtilsTest {
 
 	@Test
 	void testKillOnNullDoesNotThrowNullPointerException()
