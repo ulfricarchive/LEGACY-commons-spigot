@@ -1,15 +1,20 @@
 package com.ulfric.spigot.commons.entity;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 
+import com.google.common.base.Function;
 import com.ulfric.commons.api.UtilInstantiationException;
 
 public class EntityUtils {
+
+	public static final double HEALTH_OF_DEAD_ENTITY = 0;
 
 	public static void kill(LivingEntity entity)
 	{
@@ -18,11 +23,16 @@ public class EntityUtils {
 			return;
 		}
 
-		double damageAmount = entity.getHealth();
-		EntityDamageEvent cause = EntityUtils.newDamageEvent(entity, damageAmount);
-
+		EntityDamageEvent cause = EntityUtils.newKillingDamageEvent(entity);
 		entity.setLastDamageCause(cause);
-		entity.setHealth(0);
+		entity.setHealth(EntityUtils.HEALTH_OF_DEAD_ENTITY);
+	}
+
+	private static EntityDamageEvent newKillingDamageEvent(LivingEntity entity)
+	{
+		double damageAmount = entity.getHealth();
+		EntityDamageEvent event = EntityUtils.newDamageEvent(entity, damageAmount);
+		return event;
 	}
 
 	private static EntityDamageEvent newDamageEvent(Entity entity, double amount)
@@ -38,9 +48,11 @@ public class EntityUtils {
 		Objects.requireNonNull(entity);
 		Objects.requireNonNull(cause);
 
-		return new EntityDamageEvent(entity, cause,
-				Collections.singletonMap(EntityDamageEvent.DamageModifier.BASE, amount),
-				Collections.emptyMap());
+		Map<DamageModifier, Double> damageModifiers =
+				Collections.singletonMap(EntityDamageEvent.DamageModifier.BASE, amount);
+		Map<DamageModifier, Function<Double, Double>> modifierFunctions = Collections.emptyMap();
+
+		return new EntityDamageEvent(entity, cause, damageModifiers, modifierFunctions);
 	}
 
 	private EntityUtils()
