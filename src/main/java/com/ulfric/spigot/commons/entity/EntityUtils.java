@@ -10,6 +10,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 
 import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import com.ulfric.commons.api.UtilInstantiationException;
 
 public class EntityUtils {
@@ -48,9 +49,10 @@ public class EntityUtils {
 		Objects.requireNonNull(entity);
 		Objects.requireNonNull(cause);
 
-		Map<DamageModifier, Double> damageModifiers =
-				Collections.singletonMap(EntityDamageEvent.DamageModifier.BASE, amount);
-		Map<DamageModifier, Function<Double, Double>> modifierFunctions = Collections.emptyMap();
+		EntityDamageEvent.DamageModifier modifier = EntityDamageEvent.DamageModifier.BASE;
+		Map<DamageModifier, Double> damageModifiers = Collections.singletonMap(modifier, amount);
+		Map<DamageModifier, Function<Double, Double>> modifierFunctions =
+				Collections.singletonMap(modifier, Functions.identity());
 
 		return new EntityDamageEvent(entity, cause, damageModifiers, modifierFunctions);
 	}
