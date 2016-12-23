@@ -1,5 +1,7 @@
 package com.ulfric.spigot.commons.command;
 
+import java.lang.annotation.Annotation;
+
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -10,17 +12,29 @@ import com.ulfric.verify.Verify;
 class CommandTest {
 
 	@Test
-	void testCommandName()
+	void testCommandNameSingle()
 	{
-		Command command = this.getCommand("testCommandName");
+		Command command = this.get("testCommandNameSingle", Command.class);
 		Verify.that(command.name()).isEqualTo("hello");
 	}
 
-	private Command getCommand(String methodName)
+	@Test
+	void testCommandNameMultiple()
+	{
+		Commands Commands = this.get("testCommandNameMultiple", Commands.class);
+		Command[] values = Commands.value();
+		Verify.that(values.length).isNotZero();
+		for (Command value : values)
+		{
+			Verify.that(value.name()).isEqualTo("hello");
+		}
+	}
+
+	private <T extends Annotation> T get(String methodName, Class<T> type)
 	{
 		try
 		{
-			return Commands.class.getDeclaredMethod(methodName).getAnnotation(Command.class);
+			return Cmds.class.getDeclaredMethod(methodName).getAnnotation(type);
 		}
 		catch (NoSuchMethodException | SecurityException e)
 		{
@@ -28,10 +42,14 @@ class CommandTest {
 		}
 	}
 
-	class Commands
+	class Cmds
 	{
 		@Command(name = "hello")
-		void testCommandName() { }
+		void testCommandNameSingle() { }
+
+		@Command(name = "hello")
+		@Command(name = "hello")
+		void testCommandNameMultiple() { }
 	}
 
 }
