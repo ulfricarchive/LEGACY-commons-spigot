@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
+import com.ulfric.spigot.commons.permission.Permission;
 import com.ulfric.verify.Verify;
 
 @RunWith(JUnitPlatform.class)
@@ -30,6 +31,13 @@ class CommandTest {
 		}
 	}
 
+	@Test
+	void testCommandPermissionSingle()
+	{
+		Command command = this.get("testCommandPermissionSingle", Command.class);
+		Verify.that(command.permissions()[0].value()).isEqualTo("hello");
+	}
+
 	private <T extends Annotation> T get(String methodName, Class<T> type)
 	{
 		try
@@ -50,6 +58,9 @@ class CommandTest {
 		@Command(name = "hello")
 		@Command(name = "hello")
 		void testCommandNameMultiple() { }
+
+		@Command(name = "hello", permissions = @Permission("hello"))
+		void testCommandPermissionSingle() { }
 	}
 
 }

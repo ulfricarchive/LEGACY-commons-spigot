@@ -6,11 +6,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.ulfric.spigot.commons.permission.Permission;
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Repeatable(Commands.class)
 public @interface Command {
 
 	String name();
+
+	Permission[] permissions() default @Permission("");
 
 }
