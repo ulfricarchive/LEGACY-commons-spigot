@@ -23,7 +23,8 @@ final class CommandSchema {
 
 	public Object buildContext(CommandSender sender, String[] args)
 	{
-		// TODO temp
+		Objects.requireNonNull(sender);
+		Objects.requireNonNull(args);
 		return Arrays.asList(this.command, sender, args);
 	}
 

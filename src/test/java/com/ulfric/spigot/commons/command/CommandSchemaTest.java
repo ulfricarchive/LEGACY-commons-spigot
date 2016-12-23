@@ -2,10 +2,10 @@ package com.ulfric.spigot.commons.command;
 
 import java.util.List;
 
+import org.bukkit.command.CommandSender;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import com.ulfric.verify.Verify;
@@ -32,9 +32,25 @@ class CommandSchemaTest {
 	}
 
 	@Test
+	void testBuildContextThrowsNullPointerExceptionIfPassedNullSender()
+	{
+		String[] args = new String[0];
+		Verify.that(() -> this.mockNewInstance().buildContext(null, args)).doesThrow(NullPointerException.class);
+	}
+
+	@Test
+	void testBuildContextThrowsNullPointerExceptionIfPassedNullArgs()
+	{
+		CommandSender sender = Mockito.mock(CommandSender.class);
+		Verify.that(() -> this.mockNewInstance().buildContext(sender, null)).doesThrow(NullPointerException.class);
+	}
+
+	@Test
 	void testBuildContextReturnsList()
 	{
-		Verify.that(this.mockNewInstance().buildContext(Matchers.any(), Matchers.any())).isInstanceOf(List.class);
+		CommandSender sender = Mockito.mock(CommandSender.class);
+		String[] args = new String[0];
+		Verify.that(this.mockNewInstance().buildContext(sender, args)).isInstanceOf(List.class);
 	}
 
 	private CommandSchema mockNewInstance()
