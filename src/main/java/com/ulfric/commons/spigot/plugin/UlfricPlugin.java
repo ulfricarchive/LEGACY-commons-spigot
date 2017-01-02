@@ -24,6 +24,9 @@ public abstract class UlfricPlugin extends JavaPlugin implements Named {
 		this.injectState();
 	}
 
+	@Inject
+	private PluginModule container;
+
 	private void injectState()
 	{
 		ServiceUtils.getService(BeanFactory.class)
@@ -31,9 +34,6 @@ public abstract class UlfricPlugin extends JavaPlugin implements Named {
 			.ifPresent(i -> i.injectState(this));
 		this.container.setName(this.getName());
 	}
-
-	@Inject
-	private PluginModule container;
 
 	public final Module getContainer()
 	{
