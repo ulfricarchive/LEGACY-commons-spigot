@@ -4,7 +4,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.ulfric.commons.cdi.construct.BeanFactory;
 import com.ulfric.commons.cdi.inject.Inject;
-import com.ulfric.commons.convert.ConversionService;
 import com.ulfric.commons.logging.Logger;
 import com.ulfric.commons.naming.Named;
 import com.ulfric.spigot.commons.logging.ConsoleLogger;
@@ -21,7 +20,6 @@ public abstract class UlfricPlugin extends JavaPlugin implements Named {
 
 	public UlfricPlugin()
 	{
-		this.registerConversionService();
 		this.registerBeanFactory();
 		this.injectState();
 	}
@@ -40,11 +38,6 @@ public abstract class UlfricPlugin extends JavaPlugin implements Named {
 	public final Module getContainer()
 	{
 		return this.container;
-	}
-
-	private void registerConversionService()
-	{
-		ServiceUtils.registerIfAbsent(ConversionService.class, ConversionService::newInstance);
 	}
 
 	private void registerBeanFactory()
