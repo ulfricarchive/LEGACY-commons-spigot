@@ -1,15 +1,16 @@
 package com.ulfric.spigot.commons.panel;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
-import com.ulfric.commons.reflect.ConstructorUtils;
 import com.ulfric.spigot.commons.plugin.UlfricPlugin;
 
 public abstract class Panel<T extends PanelType> {
@@ -17,22 +18,29 @@ public abstract class Panel<T extends PanelType> {
 	private final UlfricPlugin plugin;
 	private final Player player;
 	private final Set<PanelExtension> extensions = new HashSet<>();
-
-	private T type;
+	private final T type;
 
 	protected Panel(UlfricPlugin plugin, Class<T> type, Player player)
 	{
 		this.plugin = plugin;
 		this.player = player;
-		this.loadType(type);
+		this.type = this.loadType(type);
 	}
 
-	private void loadType(Class<T> type)
+	private T loadType(Class<T> type)
 	{
-		this.type = ConstructorUtils.create(ConstructorUtils.getDeclaredConstructor(type, Panel.class), this);
+		try
+		{
+			return ConstructorUtils.invokeConstructor(type, this);
+		}
+		catch (NoSuchMethodException | IllegalAccessException |
+				InvocationTargetException | InstantiationException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
-	protected final Panel withExtension(PanelExtension extension)
+	protected final Panel<T> withExtension(PanelExtension extension)
 	{
 		extension.ownedBy(this);
 		extension.enable();
