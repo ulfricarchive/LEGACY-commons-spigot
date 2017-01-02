@@ -1,11 +1,33 @@
 package com.ulfric.commons.spigot.module;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+
+import com.ulfric.commons.cdi.construct.BeanFactory;
+import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.naming.Named;
+import com.ulfric.commons.spigot.plugin.PluginUtils;
 
 public class Module implements Named {
 
+	private final Map<String, Module> modules = new HashMap<>();
+	private final List<Listener> listeners = new ArrayList<>();
+	private final Plugin plugin = PluginUtils.getOwningPlugin(this.getClass());
+
 	private boolean loaded;
 	private boolean enabled;
+	private boolean guarded;
+
+	@Inject
+	private BeanFactory factory;
 
 	public boolean isLoaded()
 	{
@@ -20,7 +42,11 @@ public class Module implements Named {
 	public final void load()
 	{
 		this.verifyIsNotLoaded();
+
+		this.guard();
 		this.onLoad();
+		this.unguard();
+
 		this.loaded = true;
 	}
 
@@ -35,14 +61,23 @@ public class Module implements Named {
 			return;
 		}
 
+		this.guard();
 		this.onEnable();
+		this.unguard();
+
+		this.enableListeners();
 		this.enabled = true;
 	}
 
 	public void disable()
 	{
 		this.verifyIsNotDisabled();
+
+		this.guard();
 		this.onDisable();
+		this.unguard();
+
+		this.disableListeners();
 		this.enabled = false;
 	}
 
@@ -68,6 +103,82 @@ public class Module implements Named {
 		{
 			throw new IllegalStateException("The module is already disabled!");
 		}
+	}
+
+	private void guard()
+	{
+		if (this.guarded)
+		{
+			throw new IllegalStateException("The module is currently guarded");
+		}
+
+		this.guarded = true;
+	}
+
+	private void unguard()
+	{
+		this.guarded = false;
+	}
+
+	public void installModule(Class<? extends Module> module)
+	{
+		Objects.requireNonNull(module);
+
+		Module createdModule = (Module) this.factory.request(module);
+		if (this.modules.putIfAbsent(createdModule.getName(), createdModule) == null)
+		{
+			this.setupSubModule(createdModule);
+		}
+	}
+
+	private void setupSubModule(Module module)
+	{
+		if (this.isLoaded() && !module.isLoaded())
+		{
+			module.load();
+		}
+
+		if (this.isEnabled() && !module.isEnabled())
+		{
+			module.enable();
+		}
+	}
+
+	public void installListener(Class<? extends Listener> listener)
+	{
+		Objects.requireNonNull(listener);
+
+		Listener createdListener = (Listener) this.factory.request(listener);
+		this.listeners.add(createdListener);
+		this.setupListener(createdListener);
+	}
+
+	private void setupListener(Listener listener)
+	{
+		if (this.isEnabled())
+		{
+			this.registerEvents(listener);
+		}
+	}
+
+	private void enableListeners()
+	{
+		this.listeners.forEach(this::registerEvents);
+	}
+
+	private void registerEvents(Listener listener)
+	{
+		Bukkit.getPluginManager().registerEvents(listener, this.plugin);
+	}
+
+	private void disableListeners()
+	{
+		this.listeners.forEach(this::unregisterEvents);
+	}
+
+	private void unregisterEvents(Listener listener)
+	{
+		HandlerList.unregisterAll(listener);
 	}
 
 	@Load
