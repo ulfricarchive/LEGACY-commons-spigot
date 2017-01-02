@@ -60,19 +60,19 @@ public abstract class UlfricPlugin extends JavaPlugin implements Named {
 	@Override
 	public final void onLoad()
 	{
-		this.container.onLoad();
+		this.container.load();
 	}
 
 	@Override
 	public final void onEnable()
 	{
-		this.container.onEnable();
+		this.container.enable();
 	}
 
 	@Override
 	public final void onDisable()
 	{
-		this.container.onDisable();
+		this.container.disable();
 	}
 
 	public void init() { }
