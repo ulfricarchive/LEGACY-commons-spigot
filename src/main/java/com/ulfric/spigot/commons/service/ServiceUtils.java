@@ -27,7 +27,7 @@ public class ServiceUtils {
 		ServicesManager services = Bukkit.getServicesManager();
 
 		S implementation = provider.get();
-		Plugin owner = PluginUtils.getOwningPlugin(service).orElseThrow(NullPointerException::new);
+		Plugin owner = PluginUtils.getOwningPlugin(service);
 
 		services.register(service, implementation, owner, ServiceUtils.DEFAULT_SERVICE_PRIORITY);
 		return implementation;

@@ -3,7 +3,6 @@ package com.ulfric.spigot.commons.plugin;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -18,7 +17,7 @@ public class PluginUtils {
 		return Arrays.stream(Bukkit.getPluginManager().getPlugins()).collect(Collectors.toList());
 	}
 
-	public static Optional<Plugin> getOwningPlugin(Class<?> loadedClass)
+	public static Plugin getOwningPlugin(Class<?> loadedClass)
 	{
 		Objects.requireNonNull(loadedClass);
 
@@ -29,11 +28,11 @@ public class PluginUtils {
 			if (pluginClass == loadedClass ||
 					pluginClass.getClassLoader() == loader)
 			{
-				return Optional.of(plugin);
+				return plugin;
 			}
 		}
 
-		return Optional.empty();
+		throw new PluginMissingException(loadedClass);
 	}
 
 	private PluginUtils()
