@@ -27,17 +27,17 @@ public abstract class UlfricPlugin extends JavaPlugin implements Named {
 	@Inject
 	private PluginModule container;
 
+	public final Module getContainer()
+	{
+		return this.container;
+	}
+
 	private void injectState()
 	{
 		ServiceUtils.getService(BeanFactory.class)
 			.map(BeanFactory::getInjector)
 			.ifPresent(i -> i.injectState(this));
 		this.container.setName(this.getName());
-	}
-
-	public final Module getContainer()
-	{
-		return this.container;
 	}
 
 	private void registerBeanFactory()
@@ -60,6 +60,7 @@ public abstract class UlfricPlugin extends JavaPlugin implements Named {
 	@Override
 	public final void onLoad()
 	{
+		this.init();
 		this.container.load();
 	}
 

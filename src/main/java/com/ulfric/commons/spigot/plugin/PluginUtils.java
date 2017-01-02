@@ -1,34 +1,46 @@
 package com.ulfric.commons.spigot.plugin;
 
-import java.util.Arrays;
-import java.util.List;
+import java.lang.reflect.Field;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import com.ulfric.commons.api.UtilInstantiationException;
 
 public class PluginUtils {
 
-	public static List<Plugin> getAllPlugins()
+	private static final Class<?> PLUGIN_CLASS_LOADER_CLASS;
+	private static final Field JAVA_PLUGIN_FIELD;
+
+	static
 	{
-		return Arrays.stream(Bukkit.getPluginManager().getPlugins()).collect(Collectors.toList());
+		try
+		{
+			PLUGIN_CLASS_LOADER_CLASS = Class.forName("org.bukkit.plugin.java.PluginClassLoader");
+			JAVA_PLUGIN_FIELD = PLUGIN_CLASS_LOADER_CLASS.getDeclaredField("pluginInit");
+
+			PluginUtils.JAVA_PLUGIN_FIELD.setAccessible(true);
+		}
+		catch (ClassNotFoundException | NoSuchFieldException | SecurityException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
-	public static Plugin getOwningPlugin(Class<?> loadedClass)
+	public static Plugin getProvidingPlugin(Class<?> loadedClass)
 	{
 		Objects.requireNonNull(loadedClass);
 
 		ClassLoader loader = loadedClass.getClassLoader();
-		for (Plugin plugin : PluginUtils.getAllPlugins())
+		if (PluginUtils.PLUGIN_CLASS_LOADER_CLASS.isInstance(loader))
 		{
-			Class<? extends Plugin> pluginClass = plugin.getClass();
-			if (pluginClass == loadedClass ||
-					pluginClass.getClassLoader() == loader)
+			try
 			{
-				return plugin;
+				return (Plugin) PluginUtils.JAVA_PLUGIN_FIELD.get(loader);
+			}
+			catch (IllegalArgumentException | IllegalAccessException e)
+			{
+				throw new RuntimeException(e);
 			}
 		}
 

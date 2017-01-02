@@ -20,7 +20,7 @@ public class Module implements Named {
 
 	private final Map<String, Module> modules = new HashMap<>();
 	private final List<Listener> listeners = new ArrayList<>();
-	private final Plugin plugin = PluginUtils.getOwningPlugin(this.getClass());
+	private final Plugin plugin = PluginUtils.getProvidingPlugin(this.getClass());
 
 	private boolean loaded;
 	private boolean enabled;
