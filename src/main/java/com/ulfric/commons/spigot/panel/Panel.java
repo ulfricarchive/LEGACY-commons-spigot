@@ -1,4 +1,4 @@
-package com.ulfric.spigot.commons.panel;
+package com.ulfric.commons.spigot.panel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
-import com.ulfric.spigot.commons.plugin.UlfricPlugin;
+import com.ulfric.commons.spigot.plugin.UlfricPlugin;
 
 public abstract class Panel<T extends PanelType> {
 

@@ -1,4 +1,4 @@
-package com.ulfric.spigot.commons.logging;
+package com.ulfric.commons.spigot.logging;
 
 import com.ulfric.commons.cdi.construct.scope.Shared;
 import com.ulfric.commons.logging.Logger;

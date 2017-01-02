@@ -1,4 +1,4 @@
-package com.ulfric.spigot.commons.panel;
+package com.ulfric.commons.spigot.panel;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;

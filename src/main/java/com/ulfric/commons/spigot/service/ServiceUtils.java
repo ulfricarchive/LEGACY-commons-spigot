@@ -1,4 +1,4 @@
-package com.ulfric.spigot.commons.service;
+package com.ulfric.commons.spigot.service;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -10,7 +10,7 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 
 import com.ulfric.commons.api.UtilInstantiationException;
-import com.ulfric.spigot.commons.plugin.PluginUtils;
+import com.ulfric.commons.spigot.plugin.PluginUtils;
 
 public class ServiceUtils {
 

@@ -1,4 +1,4 @@
-package com.ulfric.spigot.commons.plugin;
+package com.ulfric.commons.spigot.plugin;
 
 @SuppressWarnings("serial")
 public class PluginMissingException extends RuntimeException {

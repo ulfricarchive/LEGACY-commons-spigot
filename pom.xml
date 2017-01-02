@@ -10,7 +10,7 @@
 		<version>1.0.0</version>
 	</parent>
 
-	<groupId>com.ulfric.spigot.commons</groupId>
+	<groupId>com.ulfric.commons</groupId>
 	<artifactId>commons-spigot</artifactId>
 	<version>1.0.0</version>
 	<name>Commons Spigot</name>

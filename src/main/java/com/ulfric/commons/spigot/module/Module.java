@@ -1,4 +1,4 @@
-package com.ulfric.spigot.commons.module;
+package com.ulfric.commons.spigot.module;
 
 import com.ulfric.commons.naming.Named;
 

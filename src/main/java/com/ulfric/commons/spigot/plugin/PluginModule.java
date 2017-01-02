@@ -1,6 +1,6 @@
-package com.ulfric.spigot.commons.plugin;
+package com.ulfric.commons.spigot.plugin;
 
-import com.ulfric.spigot.commons.module.Module;
+import com.ulfric.commons.spigot.module.Module;
 
 final class PluginModule extends Module {
 

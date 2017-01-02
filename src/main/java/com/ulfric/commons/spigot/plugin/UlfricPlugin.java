@@ -1,4 +1,4 @@
-package com.ulfric.spigot.commons.plugin;
+package com.ulfric.commons.spigot.plugin;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -6,15 +6,15 @@ import com.ulfric.commons.cdi.construct.BeanFactory;
 import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.logging.Logger;
 import com.ulfric.commons.naming.Named;
-import com.ulfric.spigot.commons.logging.ConsoleLogger;
-import com.ulfric.spigot.commons.module.Disable;
-import com.ulfric.spigot.commons.module.DisableInterceptor;
-import com.ulfric.spigot.commons.module.Enable;
-import com.ulfric.spigot.commons.module.EnableInterceptor;
-import com.ulfric.spigot.commons.module.Load;
-import com.ulfric.spigot.commons.module.LoadInterceptor;
-import com.ulfric.spigot.commons.module.Module;
-import com.ulfric.spigot.commons.service.ServiceUtils;
+import com.ulfric.commons.spigot.logging.ConsoleLogger;
+import com.ulfric.commons.spigot.module.Disable;
+import com.ulfric.commons.spigot.module.DisableInterceptor;
+import com.ulfric.commons.spigot.module.Enable;
+import com.ulfric.commons.spigot.module.EnableInterceptor;
+import com.ulfric.commons.spigot.module.Load;
+import com.ulfric.commons.spigot.module.LoadInterceptor;
+import com.ulfric.commons.spigot.module.Module;
+import com.ulfric.commons.spigot.service.ServiceUtils;
 
 public abstract class UlfricPlugin extends JavaPlugin implements Named {
 

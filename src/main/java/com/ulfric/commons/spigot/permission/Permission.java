@@ -1,4 +1,4 @@
-package com.ulfric.spigot.commons.permission;
+package com.ulfric.commons.spigot.permission;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;

@@ -1,4 +1,4 @@
-package com.ulfric.spigot.commons.logging;
+package com.ulfric.commons.spigot.logging;
 
 import java.util.logging.Logger;
 

@@ -1,4 +1,4 @@
-package com.ulfric.spigot.commons.panel.extend;
+package com.ulfric.commons.spigot.panel.extend;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
 import com.google.common.collect.Lists;
-import com.ulfric.spigot.commons.panel.PanelExtension;
+import com.ulfric.commons.spigot.panel.PanelExtension;
 
 public class ExtensionImmutable extends PanelExtension {
 

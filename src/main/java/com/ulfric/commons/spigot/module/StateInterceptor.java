@@ -1,4 +1,4 @@
-package com.ulfric.spigot.commons.module;
+package com.ulfric.commons.spigot.module;
 
 import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.cdi.intercept.Context;

@@ -1,4 +1,4 @@
-package com.ulfric.spigot.commons.panel;
+package com.ulfric.commons.spigot.panel;
 
 public class PanelException extends RuntimeException {
 
