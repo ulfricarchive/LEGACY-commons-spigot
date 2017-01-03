@@ -27,9 +27,17 @@ public abstract class UlfricPlugin extends JavaPlugin implements Named {
 	@Inject
 	private PluginModule container;
 
+	@Inject
+	private BeanFactory beanFactory;
+
 	public final Module getContainer()
 	{
 		return this.container;
+	}
+
+	public final BeanFactory getBeanFactory()
+	{
+		return this.beanFactory;
 	}
 
 	private void injectState()
