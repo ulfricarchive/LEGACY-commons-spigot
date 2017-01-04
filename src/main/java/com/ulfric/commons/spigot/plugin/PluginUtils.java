@@ -5,9 +5,9 @@ import java.util.Objects;
 
 import org.bukkit.plugin.Plugin;
 
-import com.ulfric.commons.api.UtilInstantiationException;
+public enum PluginUtils {
 
-public class PluginUtils {
+	;
 
 	private static final Class<?> PLUGIN_CLASS_LOADER_CLASS;
 	private static final Field JAVA_PLUGIN_FIELD;
@@ -45,11 +45,6 @@ public class PluginUtils {
 		}
 
 		throw new PluginMissingException(loadedClass);
-	}
-
-	private PluginUtils()
-	{
-		throw new UtilInstantiationException();
 	}
 
 }

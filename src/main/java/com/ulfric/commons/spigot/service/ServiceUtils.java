@@ -9,10 +9,11 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 
-import com.ulfric.commons.api.UtilInstantiationException;
 import com.ulfric.commons.spigot.plugin.PluginUtils;
 
-public class ServiceUtils {
+public enum ServiceUtils {
+
+	;
 
 	public static final ServicePriority DEFAULT_SERVICE_PRIORITY = ServicePriority.Normal;
 
@@ -42,11 +43,6 @@ public class ServiceUtils {
 			return Optional.empty();
 		}
 		return Optional.ofNullable(provider.getProvider());
-	}
-
-	private ServiceUtils()
-	{
-		throw new UtilInstantiationException();
 	}
 
 }

@@ -5,9 +5,9 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
-import com.ulfric.commons.api.UtilInstantiationException;
+public enum LoggerUtils {
 
-public class LoggerUtils {
+	;
 
 	public static Logger getGlobalLogger()
 	{
@@ -19,11 +19,6 @@ public class LoggerUtils {
 		}
 
 		return server.getLogger();
-	}
-
-	private LoggerUtils()
-	{
-		throw new UtilInstantiationException();
 	}
 
 }
