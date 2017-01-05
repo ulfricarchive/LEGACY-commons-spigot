@@ -17,7 +17,9 @@ abstract class SkeletalPermissionInterceptor implements Interceptor<Void> {
 		{
 			if (object instanceof PlayerEvent)
 			{
-				if (!this.hasPermissions(((PlayerEvent) object).getPlayer(), context.getOrigin()))
+				PlayerEvent playerEvent = (PlayerEvent) object;
+
+				if (!this.hasPermissions(playerEvent.getPlayer(), context.getOrigin()))
 				{
 					return null;
 				}
