@@ -6,6 +6,10 @@ import com.ulfric.commons.cdi.construct.BeanFactory;
 import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.logging.Logger;
 import com.ulfric.commons.naming.Named;
+import com.ulfric.commons.spigot.intercept.player.MustBeAlive;
+import com.ulfric.commons.spigot.intercept.player.MustBeAliveInterceptor;
+import com.ulfric.commons.spigot.intercept.player.MustBeDead;
+import com.ulfric.commons.spigot.intercept.player.MustBeDeadInterceptor;
 import com.ulfric.commons.spigot.logging.ConsoleLogger;
 import com.ulfric.commons.spigot.module.Disable;
 import com.ulfric.commons.spigot.module.DisableInterceptor;
@@ -76,6 +80,9 @@ public abstract class UlfricPlugin extends JavaPlugin implements Named {
 
 		factory.bind(RequirePermission.class).toInterceptor(RequirePermissionInterceptor.class);
 		factory.bind(RequirePermissions.class).toInterceptor(RequirePermissionsInterceptor.class);
+
+		factory.bind(MustBeAlive.class).toInterceptor(MustBeAliveInterceptor.class);
+		factory.bind(MustBeDead.class).toInterceptor(MustBeDeadInterceptor.class);
 	}
 
 	@Override
