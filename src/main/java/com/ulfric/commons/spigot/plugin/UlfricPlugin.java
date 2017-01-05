@@ -14,6 +14,8 @@ import com.ulfric.commons.spigot.module.EnableInterceptor;
 import com.ulfric.commons.spigot.module.Load;
 import com.ulfric.commons.spigot.module.LoadInterceptor;
 import com.ulfric.commons.spigot.module.Module;
+import com.ulfric.commons.spigot.permission.Permission;
+import com.ulfric.commons.spigot.permission.PermissionInterceptor;
 import com.ulfric.commons.spigot.service.ServiceUtils;
 
 public abstract class UlfricPlugin extends JavaPlugin implements Named {
@@ -57,12 +59,20 @@ public abstract class UlfricPlugin extends JavaPlugin implements Named {
 	{
 		BeanFactory factory = BeanFactory.newInstance();
 
+		this.registerBindings(factory);
+
+		return factory;
+	}
+
+	private void registerBindings(BeanFactory factory)
+	{
 		factory.bind(Logger.class).to(ConsoleLogger.class);
+
 		factory.bind(Load.class).toInterceptor(LoadInterceptor.class);
 		factory.bind(Enable.class).toInterceptor(EnableInterceptor.class);
 		factory.bind(Disable.class).toInterceptor(DisableInterceptor.class);
 
-		return factory;
+		factory.bind(Permission.class).toInterceptor(PermissionInterceptor.class);
 	}
 
 	@Override
