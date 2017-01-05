@@ -1,7 +1,7 @@
 package com.ulfric.commons.spigot.intercept.player;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.EntityEvent;
 
 import com.ulfric.commons.cdi.intercept.Context;
 import com.ulfric.commons.cdi.intercept.Interceptor;
@@ -13,13 +13,18 @@ abstract class SkeletalLifeInterceptor implements Interceptor<Void> {
 	{
 		for (Object object : context.getArguments())
 		{
-			if (object instanceof PlayerEvent)
+			if (object instanceof EntityEvent)
 			{
-				PlayerEvent event = (PlayerEvent) object;
+				EntityEvent event = (EntityEvent) object;
 
-				if (!this.correctLifeState(event.getPlayer()))
+				if (event.getEntity() instanceof LivingEntity)
 				{
-					return null;
+					LivingEntity entity = (LivingEntity) event.getEntity();
+
+					if (!this.correctLifeState(entity))
+					{
+						return null;
+					}
 				}
 			}
 		}
@@ -27,6 +32,6 @@ abstract class SkeletalLifeInterceptor implements Interceptor<Void> {
 		return context.proceed();
 	}
 
-	abstract boolean correctLifeState(Player player);
+	abstract boolean correctLifeState(LivingEntity entity);
 
 }

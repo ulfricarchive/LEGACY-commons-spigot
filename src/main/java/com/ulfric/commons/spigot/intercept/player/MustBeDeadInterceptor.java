@@ -1,13 +1,13 @@
 package com.ulfric.commons.spigot.intercept.player;
 
-import org.bukkit.entity.Player;
+import org.bukkit.entity.LivingEntity;
 
 public class MustBeDeadInterceptor extends SkeletalLifeInterceptor {
 
 	@Override
-	boolean correctLifeState(Player player)
+	boolean correctLifeState(LivingEntity entity)
 	{
-		return player.isDead();
+		return entity.isDead();
 	}
 
 }
