@@ -6,12 +6,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.ulfric.commons.cdi.intercept.Intercept;
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Repeatable(RequirePermissions.class)
-@Intercept
 public @interface RequirePermission {
 
 	String value();

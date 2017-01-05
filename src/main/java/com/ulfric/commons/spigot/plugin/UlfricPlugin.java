@@ -15,7 +15,7 @@ import com.ulfric.commons.spigot.module.Load;
 import com.ulfric.commons.spigot.module.LoadInterceptor;
 import com.ulfric.commons.spigot.module.Module;
 import com.ulfric.commons.spigot.permission.RequirePermissionInterceptor;
-import com.ulfric.commons.spigot.permission.RequirePermission;
+import com.ulfric.commons.spigot.permission.RequirePermissions;
 import com.ulfric.commons.spigot.service.ServiceUtils;
 
 public abstract class UlfricPlugin extends JavaPlugin implements Named {
@@ -72,7 +72,7 @@ public abstract class UlfricPlugin extends JavaPlugin implements Named {
 		factory.bind(Enable.class).toInterceptor(EnableInterceptor.class);
 		factory.bind(Disable.class).toInterceptor(DisableInterceptor.class);
 
-		factory.bind(RequirePermission.class).toInterceptor(RequirePermissionInterceptor.class);
+		factory.bind(RequirePermissions.class).toInterceptor(RequirePermissionInterceptor.class);
 	}
 
 	@Override
