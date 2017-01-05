@@ -8,10 +8,10 @@ import org.bukkit.event.player.PlayerEvent;
 import com.ulfric.commons.cdi.intercept.Context;
 import com.ulfric.commons.cdi.intercept.Interceptor;
 
-abstract class SkeletalPermissionInterceptor implements Interceptor<Void> {
+abstract class SkeletalPermissionInterceptor implements Interceptor {
 
 	@Override
-	public final Void intercept(Context<Void> context)
+	public final Object intercept(Context context)
 	{
 		for (Object object : context.getArguments())
 		{

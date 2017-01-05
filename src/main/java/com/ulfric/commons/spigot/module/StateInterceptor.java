@@ -6,20 +6,20 @@ import com.ulfric.commons.cdi.intercept.Interceptor;
 import com.ulfric.commons.logging.Logger;
 import com.ulfric.commons.naming.Named;
 
-abstract class StateInterceptor implements Interceptor<Void> {
+abstract class StateInterceptor implements Interceptor {
 
 	@Inject
 	protected Logger logger;
 
 	@Override
-	public Void intercept(Context<Void> context)
+	public Object intercept(Context context)
 	{
 		Object owner = context.getOwner();
 		String name = this.getName(owner);
 
 		this.before(name);
 		long start = System.currentTimeMillis();
-		Void result = context.proceed();
+		Object result = context.proceed();
 		long end = System.currentTimeMillis();
 		this.after(name, end - start);
 

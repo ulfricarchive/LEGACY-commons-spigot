@@ -7,10 +7,10 @@ import org.bukkit.event.player.PlayerEvent;
 import com.ulfric.commons.cdi.intercept.Context;
 import com.ulfric.commons.cdi.intercept.Interceptor;
 
-abstract class SkeletalLifeInterceptor implements Interceptor<Void> {
+abstract class SkeletalLifeInterceptor implements Interceptor {
 
 	@Override
-	public Void intercept(Context<Void> context)
+	public Object intercept(Context context)
 	{
 		for (Object object : context.getArguments())
 		{
