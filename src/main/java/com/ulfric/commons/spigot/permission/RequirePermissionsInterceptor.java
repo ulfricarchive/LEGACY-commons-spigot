@@ -1,28 +1,21 @@
 package com.ulfric.commons.spigot.permission;
 
-import org.bukkit.event.player.PlayerEvent;
+import java.lang.reflect.Method;
 
-import com.ulfric.commons.cdi.intercept.Context;
-import com.ulfric.commons.cdi.intercept.Interceptor;
+import org.bukkit.entity.Player;
 
-public class RequirePermissionsInterceptor extends SkeletalPermissionInterceptor implements Interceptor<Void> {
+public final class RequirePermissionsInterceptor extends SkeletalPermissionInterceptor {
 
-	@Override
-	public Void intercept(Context<Void> context)
+	final boolean hasPermissions(Player player, Method method)
 	{
-		RequirePermission[] permissions = context.getOrigin().getDeclaredAnnotation(RequirePermissions.class).value();
-
-		for (Object object : context.getArguments())
+		for (RequirePermission permission : method.getDeclaredAnnotation(RequirePermissions.class).value())
 		{
-			if (object instanceof PlayerEvent)
+			if (!player.hasPermission(permission.value()))
 			{
-				if (!this.hasPermissions((PlayerEvent) object, permissions))
-				{
-					return null;
-				}
+				return false;
 			}
 		}
-		return context.proceed();
+		return true;
 	}
 
 }
