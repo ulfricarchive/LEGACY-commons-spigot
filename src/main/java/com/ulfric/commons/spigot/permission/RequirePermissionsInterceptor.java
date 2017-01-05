@@ -5,7 +5,7 @@ import org.bukkit.event.player.PlayerEvent;
 import com.ulfric.commons.cdi.intercept.Context;
 import com.ulfric.commons.cdi.intercept.Interceptor;
 
-public class RequirePermissionsInterceptor implements Interceptor<Void> {
+public class RequirePermissionsInterceptor extends SkeletalPermissionInterceptor implements Interceptor<Void> {
 
 	@Override
 	public Void intercept(Context<Void> context)
@@ -16,14 +16,9 @@ public class RequirePermissionsInterceptor implements Interceptor<Void> {
 		{
 			if (object instanceof PlayerEvent)
 			{
-				PlayerEvent event = (PlayerEvent) object;
-
-				for (RequirePermission permission : permissions)
+				if (!this.hasPermissions((PlayerEvent) object, permissions))
 				{
-					if (!event.getPlayer().hasPermission(permission.value()))
-					{
-						return null;
-					}
+					return null;
 				}
 			}
 		}
