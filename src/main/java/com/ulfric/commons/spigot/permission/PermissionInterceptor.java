@@ -10,15 +10,20 @@ public class PermissionInterceptor implements Interceptor<Void> {
 	@Override
 	public Void intercept(Context<Void> context)
 	{
+		RequirePermission[] permissions = context.getOrigin().getDeclaredAnnotation(RequirePermissions.class).value();
+
 		for (Object object : context.getArguments())
 		{
 			if (object instanceof PlayerEvent)
 			{
 				PlayerEvent event = (PlayerEvent) object;
 
-				if (!event.getPlayer().hasPermission(context.getOrigin().getDeclaredAnnotation(Permission.class).value()))
+				for (RequirePermission permission : permissions)
 				{
-					return null;
+					if (!event.getPlayer().hasPermission(permission.value()))
+					{
+						return null;
+					}
 				}
 			}
 		}
