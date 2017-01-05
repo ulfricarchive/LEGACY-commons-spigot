@@ -6,6 +6,8 @@ import com.ulfric.commons.cdi.construct.BeanFactory;
 import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.logging.Logger;
 import com.ulfric.commons.naming.Named;
+import com.ulfric.commons.spigot.intercept.concurrent.OnMainThread;
+import com.ulfric.commons.spigot.intercept.concurrent.OnMainThreadInterceptor;
 import com.ulfric.commons.spigot.intercept.player.MustBeAlive;
 import com.ulfric.commons.spigot.intercept.player.MustBeAliveInterceptor;
 import com.ulfric.commons.spigot.intercept.player.MustBeDead;
@@ -74,9 +76,16 @@ public abstract class UlfricPlugin extends JavaPlugin implements Named {
 	{
 		factory.bind(Logger.class).to(ConsoleLogger.class);
 
+		this.registerInterceptors(factory);
+	}
+
+	private void registerInterceptors(BeanFactory factory)
+	{
 		factory.bind(Load.class).toInterceptor(LoadInterceptor.class);
 		factory.bind(Enable.class).toInterceptor(EnableInterceptor.class);
 		factory.bind(Disable.class).toInterceptor(DisableInterceptor.class);
+
+		factory.bind(OnMainThread.class).toInterceptor(OnMainThreadInterceptor.class);
 
 		factory.bind(RequirePermission.class).toInterceptor(RequirePermissionInterceptor.class);
 		factory.bind(RequirePermissions.class).toInterceptor(RequirePermissionsInterceptor.class);
