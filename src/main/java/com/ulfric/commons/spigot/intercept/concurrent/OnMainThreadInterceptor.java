@@ -16,7 +16,7 @@ public class OnMainThreadInterceptor implements Interceptor {
 	@Override
 	public Object intercept(Context context)
 	{
-		Plugin plugin = PluginUtils.getProvidingPlugin(context.getOrigin().getDeclaringClass());
+		Plugin plugin = this.getPluginFromContext(context);
 		return Bukkit.getScheduler().callSyncMethod(plugin, () ->
 		{
 			Object future = context.proceed();
@@ -30,6 +30,11 @@ public class OnMainThreadInterceptor implements Interceptor {
 				return ExceptionUtils.rethrow(caught);
 			}
 		});
+	}
+
+	private Plugin getPluginFromContext(Context context)
+	{
+		return PluginUtils.getProvidingPlugin(context.getOrigin().getDeclaringClass());
 	}
 
 }
