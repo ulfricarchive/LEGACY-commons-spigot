@@ -12,7 +12,7 @@ import com.ulfric.commons.spigot.plugin.PluginUtils;
 
 public class Module implements Named, State {
 
-	private final StateContainer states = new StateContainer(this);
+	private final StateContainer substates = new StateContainer(this);
 	private final Plugin plugin = PluginUtils.getProvidingPlugin(this.getClass());
 
 	private boolean loaded;
@@ -42,6 +42,12 @@ public class Module implements Named, State {
 		return this.enabled;
 	}
 
+	@Override
+	public final boolean isDisabled()
+	{
+		return State.super.isDisabled();
+	}
+
 	public final Plugin getOwningPlugin()
 	{
 		return this.plugin;
@@ -54,7 +60,15 @@ public class Module implements Named, State {
 
 		this.onLoad();
 		this.loaded = true;
-		this.states.refresh();
+		this.refreshSubstates();
+	}
+
+	private void verifyIsNotLoaded()
+	{
+		if (this.isLoaded())
+		{
+			throw new IllegalStateException("The module is already loaded!");
+		}
 	}
 
 	@Override
@@ -66,33 +80,7 @@ public class Module implements Named, State {
 
 		this.onEnable();
 		this.enabled = true;
-		this.states.refresh();
-	}
-
-	@Override
-	public void disable()
-	{
-		this.verifyIsNotDisabled();
-
-		this.onDisable();
-		this.enabled = false;
-		this.states.refresh();
-	}
-
-	private void loadIfNotLoaded()
-	{
-		if (!this.isLoaded())
-		{
-			this.load();
-		}
-	}
-
-	private void verifyIsNotLoaded()
-	{
-		if (this.isLoaded())
-		{
-			throw new IllegalStateException("The module is already loaded!");
-		}
+		this.refreshSubstates();
 	}
 
 	private void verifyIsNotEnabled()
@@ -103,12 +91,35 @@ public class Module implements Named, State {
 		}
 	}
 
+	private void loadIfNotLoaded()
+	{
+		if (!this.isLoaded())
+		{
+			this.load();
+		}
+	}
+
+	@Override
+	public void disable()
+	{
+		this.verifyIsNotDisabled();
+
+		this.onDisable();
+		this.enabled = false;
+		this.refreshSubstates();
+	}
+
 	private void verifyIsNotDisabled()
 	{
-		if (!this.isEnabled())
+		if (this.isDisabled())
 		{
 			throw new IllegalStateException("The module is already disabled!");
 		}
+	}
+
+	private void refreshSubstates()
+	{
+		this.substates.refresh();
 	}
 
 	public final void installModule(Class<? extends Module> module)
@@ -116,7 +127,7 @@ public class Module implements Named, State {
 		Objects.requireNonNull(module);
 
 		Module createdModule = (Module) this.factory.request(module);
-		this.states.install(createdModule);
+		this.substates.install(createdModule);
 	}
 
 	public final void installListener(Class<? extends Listener> listener)
@@ -125,7 +136,7 @@ public class Module implements Named, State {
 
 		Listener createdListener = (Listener) this.factory.request(listener);
 		State state = new ListenerState(this, createdListener);
-		this.states.install(state);
+		this.substates.install(state);
 	}
 
 }
