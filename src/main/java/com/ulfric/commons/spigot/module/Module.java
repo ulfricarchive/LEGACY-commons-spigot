@@ -122,12 +122,12 @@ public class Module implements Named, State {
 		this.substates.refresh();
 	}
 
-	public final void installModule(Class<? extends Module> module)
+	public final void install(Class<? extends State> state)
 	{
-		Objects.requireNonNull(module);
+		Objects.requireNonNull(state);
 
-		Module createdModule = (Module) this.factory.request(module);
-		this.substates.install(createdModule);
+		State createdState = (State) this.factory.request(state);
+		this.substates.install(createdState);
 	}
 
 	public final void installListener(Class<? extends Listener> listener)
