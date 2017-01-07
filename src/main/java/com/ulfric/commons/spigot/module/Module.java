@@ -53,8 +53,8 @@ public class Module implements Named, State {
 		this.verifyIsNotLoaded();
 
 		this.onLoad();
-
 		this.loaded = true;
+		this.states.refresh();
 	}
 
 	@Override
