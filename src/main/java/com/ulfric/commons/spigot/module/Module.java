@@ -24,7 +24,6 @@ public class Module implements Named {
 
 	private boolean loaded;
 	private boolean enabled;
-	private boolean guarded;
 
 	@Inject
 	private BeanFactory factory;
@@ -43,9 +42,7 @@ public class Module implements Named {
 	{
 		this.verifyIsNotLoaded();
 
-		this.guard();
 		this.onLoad();
-		this.unguard();
 
 		this.loaded = true;
 	}
@@ -57,15 +54,10 @@ public class Module implements Named {
 		if (!this.isLoaded())
 		{
 			this.load();
-			this.enable();
-			return;
 		}
 
-		this.guard();
-		this.onEnable();
-		this.unguard();
-
 		this.enableListeners();
+		this.onEnable();
 		this.enabled = true;
 	}
 
@@ -73,11 +65,8 @@ public class Module implements Named {
 	{
 		this.verifyIsNotDisabled();
 
-		this.guard();
-		this.onDisable();
-		this.unguard();
-
 		this.disableListeners();
+		this.onDisable();
 		this.enabled = false;
 	}
 
@@ -103,21 +92,6 @@ public class Module implements Named {
 		{
 			throw new IllegalStateException("The module is already disabled!");
 		}
-	}
-
-	private void guard()
-	{
-		if (this.guarded)
-		{
-			throw new IllegalStateException("The module is currently guarded");
-		}
-
-		this.guarded = true;
-	}
-
-	private void unguard()
-	{
-		this.guarded = false;
 	}
 
 	public void installModule(Class<? extends Module> module)
