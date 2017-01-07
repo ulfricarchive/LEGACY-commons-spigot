@@ -100,7 +100,7 @@ public class Module implements Named, State {
 	}
 
 	@Override
-	public void disable()
+	public final void disable()
 	{
 		this.verifyIsNotDisabled();
 
