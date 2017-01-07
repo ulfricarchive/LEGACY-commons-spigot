@@ -1,5 +1,6 @@
 package com.ulfric.commons.spigot.service;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -9,6 +10,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 
+import com.ulfric.commons.service.Service;
 import com.ulfric.commons.spigot.plugin.PluginUtils;
 
 public enum ServiceUtils {
@@ -17,25 +19,46 @@ public enum ServiceUtils {
 
 	public static final ServicePriority DEFAULT_SERVICE_PRIORITY = ServicePriority.Normal;
 
-	public static <S> S registerIfAbsent(Class<S> service, Supplier<S> provider)
+	public static <S extends Service> S registerIfAbsent(Class<S> service, Supplier<S> provider)
 	{
+		Objects.requireNonNull(service);
+		Objects.requireNonNull(provider);
+
 		Optional<S> currentService = ServiceUtils.getService(service);
 		if (currentService.isPresent())
 		{
 			return currentService.get();
 		}
 
-		ServicesManager services = Bukkit.getServicesManager();
-
 		S implementation = provider.get();
-		Plugin owner = PluginUtils.getProvidingPlugin(service);
+		ServiceUtils.register(service, implementation);
 
-		services.register(service, implementation, owner, ServiceUtils.DEFAULT_SERVICE_PRIORITY);
 		return implementation;
 	}
 
-	public static <S> Optional<S> getService(Class<S> service)
+	public static <S extends Service> void register(Class<S> service, S implementation)
 	{
+		Objects.requireNonNull(service);
+		Objects.requireNonNull(implementation);
+
+		ServicesManager services = Bukkit.getServicesManager();
+		Plugin owner = PluginUtils.getProvidingPlugin(implementation.getClass());
+		services.register(service, implementation, owner, ServiceUtils.DEFAULT_SERVICE_PRIORITY);
+	}
+
+	public static <S extends Service> void unregister(Class<S> service, S implementation)
+	{
+		Objects.requireNonNull(service);
+		Objects.requireNonNull(implementation);
+
+		ServicesManager services = Bukkit.getServicesManager();
+		services.unregister(service, implementation);
+	}
+
+	public static <S extends Service> Optional<S> getService(Class<S> service)
+	{
+		Objects.requireNonNull(service);
+
 		ServicesManager services = Bukkit.getServicesManager();
 		RegisteredServiceProvider<S> provider = services.getRegistration(service);
 		if (provider == null)

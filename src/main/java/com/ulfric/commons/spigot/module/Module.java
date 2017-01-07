@@ -8,6 +8,7 @@ import org.bukkit.plugin.Plugin;
 import com.ulfric.commons.cdi.construct.BeanFactory;
 import com.ulfric.commons.cdi.inject.Inject;
 import com.ulfric.commons.naming.Named;
+import com.ulfric.commons.service.Service;
 import com.ulfric.commons.spigot.plugin.PluginUtils;
 
 public class Module implements Named, State {
@@ -126,17 +127,47 @@ public class Module implements Named, State {
 	{
 		Objects.requireNonNull(state);
 
-		State createdState = (State) this.factory.request(state);
-		this.substates.install(createdState);
+		State instance = this.request(state);
+		this.installState(instance);
 	}
 
 	public final void installListener(Class<? extends Listener> listener)
 	{
 		Objects.requireNonNull(listener);
 
-		Listener createdListener = (Listener) this.factory.request(listener);
+		Listener createdListener = this.request(listener);
 		State state = new ListenerState(this, createdListener);
+		this.installState(state);
+	}
+
+	public final <S extends Service> void installService(Class<S> service, Class<? extends S> implementation)
+	{
+		Objects.requireNonNull(service);
+		Objects.requireNonNull(implementation);
+
+		this.bind(service, implementation);
+		S instance = this.request(service);
+		State state = new ServiceState<>(this, service, instance);
+		this.installState(state);
+	}
+
+	private <T> void bind(Class<T> service, Class<? extends T> implementation)
+	{
+		this.factory.bind(service).to(implementation);
+	}
+
+	private void installState(State state)
+	{
+		Objects.requireNonNull(state);
+
 		this.substates.install(state);
+	}
+
+	private <T> T request(Class<T> request)
+	{
+		@SuppressWarnings("unchecked")
+		T implementation = (T) this.factory.request(request);
+		return implementation;
 	}
 
 }
