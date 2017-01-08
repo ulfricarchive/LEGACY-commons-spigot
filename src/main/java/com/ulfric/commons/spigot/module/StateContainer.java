@@ -13,7 +13,6 @@ final class StateContainer {
 
 	private final State owner;
 	private final Set<State> states = new LinkedHashSet<>();
-	private boolean loaded;
 
 	public void install(State state)
 	{
@@ -21,45 +20,29 @@ final class StateContainer {
 
 		if (this.states.add(state))
 		{
-			this.setupState(state);
-		}
-	}
-
-	private void setupState(State state)
-	{
-		if (this.owner.isLoaded())
-		{
-			if (!state.isLoaded())
-			{
-				state.load();
-			}
-		}
-
-		if (this.owner.isEnabled())
-		{
-			if (state.isDisabled())
-			{
-				state.enable();
-			}
-
-			return;
+			this.refreshState(state);
 		}
 	}
 
 	public void refresh()
 	{
-		if (!this.loaded && this.owner.isLoaded())
+		this.states.forEach(this::refreshState);
+	}
+
+	private void refreshState(State state)
+	{
+		if (this.owner.isLoaded() && !state.isLoaded())
 		{
-			this.states.forEach(State::load);
+			state.load();
 		}
 
-		if (this.owner.isEnabled())
+		if (this.owner.isEnabled() && !state.isEnabled())
 		{
-			this.states.forEach(State::enable);
+			state.enable();
 		}
-		else if (this.owner.isDisabled())
+		else if (this.owner.isDisabled() && !state.isDisabled())
 		{
-			this.states.forEach(State::disable);
+			state.disable();
 		}
 	}
 
