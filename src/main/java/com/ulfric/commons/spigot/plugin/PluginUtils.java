@@ -1,8 +1,12 @@
 package com.ulfric.commons.spigot.plugin;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 public enum PluginUtils {
@@ -45,6 +49,14 @@ public enum PluginUtils {
 		}
 
 		throw new PluginMissingException(loadedClass);
+	}
+
+	public static List<Plugin> getPlugins()
+	{
+		Plugin[] pluginArray = Bukkit.getPluginManager().getPlugins();
+		List<Plugin> plugins = new ArrayList<>(pluginArray.length);
+		CollectionUtils.addAll(plugins, pluginArray);
+		return plugins;
 	}
 
 }
