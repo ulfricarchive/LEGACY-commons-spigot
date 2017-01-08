@@ -51,7 +51,7 @@ public enum PluginUtils {
 		throw new PluginMissingException(loadedClass);
 	}
 
-	public static List<Plugin> getPlugins()
+	public static List<Plugin> getAllPlugins()
 	{
 		Plugin[] pluginArray = Bukkit.getPluginManager().getPlugins();
 		List<Plugin> plugins = new ArrayList<>(pluginArray.length);
