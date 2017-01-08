@@ -56,10 +56,11 @@ final class StateContainer {
 		if (this.owner.isEnabled())
 		{
 			this.states.forEach(State::enable);
-			return;
 		}
-
-		this.states.forEach(State::disable);
+		else if (this.owner.isDisabled())
+		{
+			this.states.forEach(State::disable);
+		}
 	}
 
 }
