@@ -13,8 +13,8 @@ import com.ulfric.commons.spigot.plugin.PluginUtils;
 
 public class Module implements Named, State {
 
-	private final StateContainer substates = new StateContainer(this);
 	private final Plugin plugin = PluginUtils.getProvidingPlugin(this.getClass());
+	private final StateContainer substates = new StateContainer(this);
 
 	private boolean loaded;
 	private boolean enabled;
@@ -165,9 +165,7 @@ public class Module implements Named, State {
 
 	private <T> T request(Class<T> request)
 	{
-		@SuppressWarnings("unchecked")
-		T implementation = (T) this.factory.request(request);
-		return implementation;
+		return this.factory.requestExact(request);
 	}
 
 }
