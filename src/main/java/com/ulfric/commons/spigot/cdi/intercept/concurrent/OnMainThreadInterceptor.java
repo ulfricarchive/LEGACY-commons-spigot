@@ -1,4 +1,4 @@
-package com.ulfric.commons.spigot.intercept.concurrent;
+package com.ulfric.commons.spigot.cdi.intercept.concurrent;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;

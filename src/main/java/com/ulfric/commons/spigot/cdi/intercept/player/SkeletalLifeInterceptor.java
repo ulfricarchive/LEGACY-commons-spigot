@@ -1,4 +1,4 @@
-package com.ulfric.commons.spigot.intercept.player;
+package com.ulfric.commons.spigot.cdi.intercept.player;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityEvent;

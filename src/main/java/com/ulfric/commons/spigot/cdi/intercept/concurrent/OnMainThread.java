@@ -1,4 +1,4 @@
-package com.ulfric.commons.spigot.intercept.concurrent;
+package com.ulfric.commons.spigot.cdi.intercept.concurrent;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

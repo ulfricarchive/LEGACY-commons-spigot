@@ -1,4 +1,4 @@
-package com.ulfric.commons.spigot.intercept.server;
+package com.ulfric.commons.spigot.cdi.intercept.server;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 
 import com.ulfric.commons.cdi.intercept.Context;
 import com.ulfric.commons.cdi.intercept.Interceptor;
-import com.ulfric.commons.spigot.intercept.concurrent.OnMainThread;
+import com.ulfric.commons.spigot.cdi.intercept.concurrent.OnMainThread;
 
 public class BroadcastInterceptor implements Interceptor {
 

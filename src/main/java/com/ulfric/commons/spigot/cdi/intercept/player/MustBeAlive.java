@@ -1,4 +1,4 @@
-package com.ulfric.commons.spigot.intercept.player;
+package com.ulfric.commons.spigot.cdi.intercept.player;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

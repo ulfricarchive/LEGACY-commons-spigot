@@ -1,4 +1,4 @@
-package com.ulfric.commons.spigot.intercept.server;
+package com.ulfric.commons.spigot.cdi.intercept.server;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
