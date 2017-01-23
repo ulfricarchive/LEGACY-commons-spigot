@@ -1,11 +1,13 @@
-package com.ulfric.commons.spigot.module;
+package com.ulfric.commons.spigot.container;
 
+import com.ulfric.commons.cdi.container.Component;
+import com.ulfric.commons.cdi.container.SkeletalComponent;
 import com.ulfric.commons.service.Service;
 import com.ulfric.commons.spigot.service.ServiceUtils;
 
-final class ServiceState<S extends Service> extends SkeletalState {
+final class ServiceComponent<S extends Service> extends SkeletalComponent {
 
-	public ServiceState(Module parent, Class<S> service, S implementation)
+	public ServiceComponent(Component parent, Class<S> service, S implementation)
 	{
 		super(parent);
 		this.service = service;

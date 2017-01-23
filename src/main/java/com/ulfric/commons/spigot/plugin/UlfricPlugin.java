@@ -1,18 +1,22 @@
 package com.ulfric.commons.spigot.plugin;
 
+import java.util.logging.Logger;
+
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.ulfric.commons.cdi.construct.BeanFactory;
-import com.ulfric.commons.cdi.inject.Inject;
-import com.ulfric.commons.cdi.inject.Injector;
-import com.ulfric.commons.naming.Named;
-import com.ulfric.commons.spigot.module.Module;
+import com.ulfric.commons.cdi.ObjectFactory;
+import com.ulfric.commons.cdi.container.Container;
+import com.ulfric.commons.cdi.scope.Supplied;
+import com.ulfric.commons.cdi.scope.SuppliedScopeStrategy;
+import com.ulfric.commons.spigot.container.ContainerLogger;
 import com.ulfric.commons.spigot.service.ServiceUtils;
 
-public abstract class UlfricPlugin extends JavaPlugin implements Named {
+@Supplied
+public abstract class UlfricPlugin extends JavaPlugin {
 
-	@Inject
-	private PluginModule container;
+	private ObjectFactory containerFactory;
+	private PluginContainer container;
 
 	public UlfricPlugin()
 	{
@@ -21,26 +25,48 @@ public abstract class UlfricPlugin extends JavaPlugin implements Named {
 
 	protected void setupPlatform()
 	{
-		this.getGlobalInjector().injectState(this);
-		this.setupContainer();
+		this.createObjectFactoryParentingPluginContainer();
+		this.bindPluginToThis();
+
+		this.createPluginContainer();
 	}
 
-	private void setupContainer()
+	private void createObjectFactoryParentingPluginContainer()
 	{
-		this.container.setName(this.getName());
+		ObjectFactory factory = this.getParentFactory();
+		this.containerFactory = factory.requestExact(ObjectFactory.class);
 	}
 
-	private Injector getGlobalInjector()
+	private ObjectFactory getParentFactory()
 	{
-		return this.getGlobalBeanFactory().getInjector();
+		return ServiceUtils.getService(ObjectFactory.class).orElseThrow(IllegalStateException::new);
 	}
 
-	private BeanFactory getGlobalBeanFactory()
+	private void bindPluginToThis()
 	{
-		return ServiceUtils.getService(BeanFactory.class).orElseThrow(IllegalStateException::new);
+		ObjectFactory factory = this.containerFactory;
+		SuppliedScopeStrategy scope = (SuppliedScopeStrategy) factory.request(Supplied.class);
+		scope.register(this.getThisClassAsObject(), () -> this);
+		factory.bind(Plugin.class).to(this.getClass());
+
+		factory.bind(Logger.class).to(ContainerLogger.class);
+		scope.register(ContainerLogger.class, () -> new ContainerLogger(this.getLogger()));
 	}
 
-	public final Module getContainer()
+	private Class<Object> getThisClassAsObject()
+	{
+		Class<?> clazz = this.getClass();
+		@SuppressWarnings("unchecked")
+		Class<Object> casted = (Class<Object>) clazz;
+		return casted;
+	}
+
+	private void createPluginContainer()
+	{
+		this.container = this.containerFactory.requestExact(PluginContainer.class);
+	}
+
+	public final Container getContainer()
 	{
 		return this.container;
 	}

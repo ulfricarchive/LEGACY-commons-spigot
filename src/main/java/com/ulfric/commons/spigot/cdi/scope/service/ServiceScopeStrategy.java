@@ -1,13 +1,15 @@
 package com.ulfric.commons.spigot.cdi.scope.service;
 
-import com.ulfric.commons.cdi.construct.scope.ScopeStrategy;
-import com.ulfric.commons.cdi.inject.Injector;
+import com.ulfric.commons.cdi.scope.ScopeStrategy;
+import com.ulfric.commons.cdi.scope.Scoped;
 import com.ulfric.commons.spigot.service.ServiceUtils;
 
-public class ServiceScopeStrategy implements ScopeStrategy<Service> {
+public enum ServiceScopeStrategy implements ScopeStrategy {
+
+	INSTANCE;
 
 	@Override
-	public <T> T getInstance(Class<T> request, Service scope, Injector injector)
+	public <T> Scoped<T> getOrCreate(Class<T> request)
 	{
 		if (!com.ulfric.commons.service.Service.class.isAssignableFrom(request))
 		{
@@ -20,7 +22,9 @@ public class ServiceScopeStrategy implements ScopeStrategy<Service> {
 
 		@SuppressWarnings("unchecked")
 		T registeredService = (T) ServiceUtils.getService(service);
-		return registeredService;
+		Scoped<T> scoped = new Scoped<>(registeredService);
+		scoped.read();
+		return scoped;
 	}
 
 }

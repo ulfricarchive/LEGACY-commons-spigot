@@ -21,7 +21,7 @@ public enum PluginUtils {
 		try
 		{
 			PLUGIN_CLASS_LOADER_CLASS = Class.forName("org.bukkit.plugin.java.PluginClassLoader");
-			JAVA_PLUGIN_FIELD = PLUGIN_CLASS_LOADER_CLASS.getDeclaredField("pluginInit");
+			JAVA_PLUGIN_FIELD = PluginUtils.PLUGIN_CLASS_LOADER_CLASS.getDeclaredField("pluginInit");
 
 			PluginUtils.JAVA_PLUGIN_FIELD.setAccessible(true);
 		}
