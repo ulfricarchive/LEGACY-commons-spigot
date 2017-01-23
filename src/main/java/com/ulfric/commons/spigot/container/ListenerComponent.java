@@ -9,9 +9,9 @@ import com.ulfric.commons.cdi.container.Component;
 import com.ulfric.commons.cdi.container.SkeletalComponent;
 import com.ulfric.commons.spigot.plugin.PluginUtils;
 
-final class ListenerState extends SkeletalComponent {
+final class ListenerComponent extends SkeletalComponent {
 
-	public ListenerState(Component parent, Listener listener)
+	public ListenerComponent(Component parent, Listener listener)
 	{
 		super(parent);
 		this.listener = listener;
