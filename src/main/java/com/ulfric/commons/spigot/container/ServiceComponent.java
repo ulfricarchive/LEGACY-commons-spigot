@@ -5,7 +5,7 @@ import com.ulfric.commons.cdi.container.SkeletalComponent;
 import com.ulfric.commons.service.Service;
 import com.ulfric.commons.spigot.service.ServiceUtils;
 
-final class ServiceComponent<S extends Service> extends SkeletalComponent {
+public final class ServiceComponent<S extends Service> extends SkeletalComponent {
 
 	public ServiceComponent(Component parent, Class<S> service, S implementation)
 	{

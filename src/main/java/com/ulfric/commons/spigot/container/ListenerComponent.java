@@ -9,7 +9,7 @@ import com.ulfric.commons.cdi.container.Component;
 import com.ulfric.commons.cdi.container.SkeletalComponent;
 import com.ulfric.commons.spigot.plugin.PluginUtils;
 
-final class ListenerComponent extends SkeletalComponent {
+public final class ListenerComponent extends SkeletalComponent {
 
 	public ListenerComponent(Component parent, Listener listener)
 	{
