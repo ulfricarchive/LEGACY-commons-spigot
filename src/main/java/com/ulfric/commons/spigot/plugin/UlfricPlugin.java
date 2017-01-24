@@ -74,8 +74,8 @@ public abstract class UlfricPlugin extends JavaPlugin {
 	@Override
 	public final void onLoad()
 	{
-		this.init();
 		this.container.load();
+		this.init();
 	}
 
 	@Override

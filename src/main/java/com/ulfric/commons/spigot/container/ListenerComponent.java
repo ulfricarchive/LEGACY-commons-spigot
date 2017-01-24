@@ -6,10 +6,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 import com.ulfric.commons.cdi.container.Component;
-import com.ulfric.commons.cdi.container.SkeletalComponent;
+import com.ulfric.commons.cdi.container.ChildComponent;
 import com.ulfric.commons.spigot.plugin.PluginUtils;
 
-public final class ListenerComponent extends SkeletalComponent {
+public final class ListenerComponent extends ChildComponent {
 
 	public ListenerComponent(Component parent, Listener listener)
 	{
@@ -20,14 +20,14 @@ public final class ListenerComponent extends SkeletalComponent {
 	private final Listener listener;
 
 	@Override
-	public void enable()
+	public void onEnable()
 	{
 		Plugin owningPlugin = PluginUtils.getProvidingPlugin(this.parent.getClass());
 		Bukkit.getPluginManager().registerEvents(this.listener, owningPlugin);
 	}
 
 	@Override
-	public void disable()
+	public void onDisable()
 	{
 		HandlerList.unregisterAll(this.listener);
 	}
