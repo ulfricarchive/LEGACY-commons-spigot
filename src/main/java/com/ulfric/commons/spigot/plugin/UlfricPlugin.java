@@ -50,7 +50,7 @@ public abstract class UlfricPlugin extends JavaPlugin {
 		factory.bind(Plugin.class).to(this.getClass());
 
 		factory.bind(Logger.class).to(ContainerLogger.class);
-		scope.register(ContainerLogger.class, () -> new ContainerLogger(this.getLogger()));
+		scope.register(ContainerLogger.class, () -> new ContainerLogger(this, this.getLogger()));
 	}
 
 	private Class<Object> getThisClassAsObject()
