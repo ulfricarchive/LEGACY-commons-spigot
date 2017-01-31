@@ -22,7 +22,7 @@ public enum ServiceScopeStrategy implements ScopeStrategy {
 
 		@SuppressWarnings("unchecked")
 		T registeredService = (T) ServiceUtils.getService(service);
-		Scoped<T> scoped = new Scoped<>(registeredService);
+		Scoped<T> scoped = new Scoped<>(request, registeredService);
 		scoped.read();
 		return scoped;
 	}
