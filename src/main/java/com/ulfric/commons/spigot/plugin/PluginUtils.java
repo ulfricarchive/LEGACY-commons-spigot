@@ -31,11 +31,30 @@ public enum PluginUtils {
 		}
 	}
 
+	public static List<Plugin> getAllPlugins()
+	{
+		Plugin[] pluginArray = Bukkit.getPluginManager().getPlugins();
+		List<Plugin> plugins = new ArrayList<>(pluginArray.length);
+		CollectionUtils.addAll(plugins, pluginArray);
+		return plugins;
+	}
+
 	public static Plugin getProvidingPlugin(Class<?> loadedClass)
 	{
 		Objects.requireNonNull(loadedClass);
 
 		ClassLoader loader = loadedClass.getClassLoader();
+		Plugin pluginContext = PluginUtils.getPluginFromClassLoader(loader);
+		if (pluginContext != null)
+		{
+			return pluginContext;
+		}
+
+		throw new PluginMissingException(loadedClass);
+	}
+
+	private static Plugin getPluginFromClassLoader(ClassLoader loader)
+	{
 		if (PluginUtils.PLUGIN_CLASS_LOADER_CLASS.isInstance(loader))
 		{
 			try
@@ -48,15 +67,7 @@ public enum PluginUtils {
 			}
 		}
 
-		throw new PluginMissingException(loadedClass);
-	}
-
-	public static List<Plugin> getAllPlugins()
-	{
-		Plugin[] pluginArray = Bukkit.getPluginManager().getPlugins();
-		List<Plugin> plugins = new ArrayList<>(pluginArray.length);
-		CollectionUtils.addAll(plugins, pluginArray);
-		return plugins;
+		return null;
 	}
 
 }

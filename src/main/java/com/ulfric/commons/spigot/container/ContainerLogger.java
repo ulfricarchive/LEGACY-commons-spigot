@@ -9,9 +9,9 @@ import com.ulfric.commons.cdi.scope.Supplied;
 @Supplied
 public final class ContainerLogger extends Logger {
 
-	public ContainerLogger(Plugin plugin, Logger parent)
+	public ContainerLogger(Plugin plugin)
 	{
-		super(plugin.getName(), parent.getResourceBundleName());
+		super(plugin.getName(), plugin.getLogger().getResourceBundleName());
 	}
 
 }

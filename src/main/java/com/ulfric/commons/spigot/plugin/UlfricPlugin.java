@@ -47,10 +47,9 @@ public abstract class UlfricPlugin extends JavaPlugin {
 		ObjectFactory factory = this.containerFactory;
 		SuppliedScopeStrategy scope = (SuppliedScopeStrategy) factory.request(Supplied.class);
 		scope.register(this.getThisClassAsObject(), () -> this);
+		scope.register(ContainerLogger.class, () -> new ContainerLogger(this));
 		factory.bind(Plugin.class).to(this.getClass());
-
 		factory.bind(Logger.class).to(ContainerLogger.class);
-		scope.register(ContainerLogger.class, () -> new ContainerLogger(this, this.getLogger()));
 	}
 
 	private Class<Object> getThisClassAsObject()
