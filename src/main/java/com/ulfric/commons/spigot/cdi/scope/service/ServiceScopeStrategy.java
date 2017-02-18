@@ -30,7 +30,8 @@ public enum ServiceScopeStrategy implements ScopeStrategy {
 		return scoped;
 	}
 
-	private void verifyClassIsService(Class<?> request) {
+	private void verifyClassIsService(Class<?> request)
+	{
 		if (!com.ulfric.commons.service.Service.class.isAssignableFrom(request))
 		{
 			throw new NotAServiceException();
