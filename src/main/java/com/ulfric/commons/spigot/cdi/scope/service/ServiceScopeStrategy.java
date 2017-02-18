@@ -11,10 +11,13 @@ public enum ServiceScopeStrategy implements ScopeStrategy {
 	@Override
 	public <T> Scoped<T> getOrCreate(Class<T> request)
 	{
-		if (!com.ulfric.commons.service.Service.class.isAssignableFrom(request))
-		{
-			throw new NotAServiceException();
-		}
+		return this.getOrEmpty(request);
+	}
+
+	@Override
+	public <T> Scoped<T> getOrEmpty(Class<T> request)
+	{
+		this.verifyClassIsService(request);
 
 		@SuppressWarnings("unchecked")
 		Class<? extends com.ulfric.commons.service.Service> service =
@@ -25,6 +28,13 @@ public enum ServiceScopeStrategy implements ScopeStrategy {
 		Scoped<T> scoped = new Scoped<>(request, registeredService);
 		scoped.read();
 		return scoped;
+	}
+
+	private void verifyClassIsService(Class<?> request) {
+		if (!com.ulfric.commons.service.Service.class.isAssignableFrom(request))
+		{
+			throw new NotAServiceException();
+		}
 	}
 
 }
