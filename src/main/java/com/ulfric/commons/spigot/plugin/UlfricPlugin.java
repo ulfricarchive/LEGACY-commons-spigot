@@ -15,26 +15,22 @@ import com.ulfric.commons.spigot.service.ServiceUtils;
 @Supplied
 public abstract class UlfricPlugin extends JavaPlugin {
 
-	private ObjectFactory containerFactory;
-	private PluginContainer container;
+	private final ObjectFactory containerFactory;
+	private final Container container;
 
 	public UlfricPlugin()
 	{
-		this.setupPlatform();
-	}
+		this.containerFactory = this.createObjectFactoryParentingPluginContainer();
+		this.containerFactory.initialize(this);
 
-	protected void setupPlatform()
-	{
-		this.createObjectFactoryParentingPluginContainer();
 		this.bindPluginToThis();
-
-		this.createPluginContainer();
+		this.container = this.createPluginContainer();
 	}
 
-	private void createObjectFactoryParentingPluginContainer()
+	private ObjectFactory createObjectFactoryParentingPluginContainer()
 	{
 		ObjectFactory factory = this.getParentFactory();
-		this.containerFactory = factory.requestExact(ObjectFactory.class);
+		return factory.requestExact(ObjectFactory.class);
 	}
 
 	private ObjectFactory getParentFactory()
@@ -60,9 +56,9 @@ public abstract class UlfricPlugin extends JavaPlugin {
 		return casted;
 	}
 
-	private void createPluginContainer()
+	private Container createPluginContainer()
 	{
-		this.container = this.containerFactory.requestExact(PluginContainer.class);
+		return this.containerFactory.requestExact(PluginContainer.class);
 	}
 
 	public final Container getContainer()
