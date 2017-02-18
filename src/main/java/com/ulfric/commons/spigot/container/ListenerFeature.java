@@ -5,13 +5,13 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
-import com.ulfric.commons.cdi.container.Component;
-import com.ulfric.commons.cdi.container.ChildComponent;
+import com.ulfric.commons.cdi.container.ChildFeature;
+import com.ulfric.commons.cdi.container.Feature;
 import com.ulfric.commons.spigot.plugin.PluginUtils;
 
-public final class ListenerComponent extends ChildComponent {
+public final class ListenerFeature extends ChildFeature {
 
-	public ListenerComponent(Component parent, Listener listener)
+	public ListenerFeature(Feature parent, Listener listener)
 	{
 		super(parent);
 		this.listener = listener;
