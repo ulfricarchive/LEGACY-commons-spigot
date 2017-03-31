@@ -1,10 +1,10 @@
 package com.ulfric.commons.spigot.container;
 
-import com.ulfric.commons.cdi.container.ChildFeature;
-import com.ulfric.commons.cdi.container.Feature;
 import com.ulfric.commons.service.Service;
 import com.ulfric.commons.spigot.cdi.scope.service.NotAServiceException;
 import com.ulfric.commons.spigot.service.ServiceUtils;
+import com.ulfric.dragoon.container.ChildFeature;
+import com.ulfric.dragoon.container.Feature;
 
 public final class ServiceFeature<S extends Service> extends ChildFeature {
 

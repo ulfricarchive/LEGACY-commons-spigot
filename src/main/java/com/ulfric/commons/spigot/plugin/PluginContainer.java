@@ -2,8 +2,8 @@ package com.ulfric.commons.spigot.plugin;
 
 import org.bukkit.plugin.Plugin;
 
-import com.ulfric.commons.cdi.container.Container;
-import com.ulfric.commons.cdi.inject.Inject;
+import com.ulfric.dragoon.container.Container;
+import com.ulfric.dragoon.inject.Inject;
 
 class PluginContainer extends Container {
 

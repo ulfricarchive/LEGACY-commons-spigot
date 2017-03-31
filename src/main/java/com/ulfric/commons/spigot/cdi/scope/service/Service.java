@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.ulfric.commons.cdi.scope.Scope;
+import com.ulfric.dragoon.scope.Scope;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
