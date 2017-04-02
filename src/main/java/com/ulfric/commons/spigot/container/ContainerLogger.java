@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.plugin.Plugin;
 
-import com.ulfric.commons.cdi.scope.Supplied;
+import com.ulfric.dragoon.scope.Supplied;
 
 @Supplied
 public final class ContainerLogger extends Logger {

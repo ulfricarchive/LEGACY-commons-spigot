@@ -5,12 +5,12 @@ import java.util.logging.Logger;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.ulfric.commons.cdi.ObjectFactory;
-import com.ulfric.commons.cdi.container.Container;
-import com.ulfric.commons.cdi.scope.Supplied;
-import com.ulfric.commons.cdi.scope.SuppliedScopeStrategy;
 import com.ulfric.commons.spigot.container.ContainerLogger;
 import com.ulfric.commons.spigot.service.ServiceUtils;
+import com.ulfric.dragoon.ObjectFactory;
+import com.ulfric.dragoon.container.Container;
+import com.ulfric.dragoon.scope.Supplied;
+import com.ulfric.dragoon.scope.SuppliedScopeStrategy;
 
 @Supplied
 public abstract class UlfricPlugin extends JavaPlugin {

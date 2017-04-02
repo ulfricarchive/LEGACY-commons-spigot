@@ -1,8 +1,8 @@
 package com.ulfric.commons.spigot.cdi.scope.service;
 
-import com.ulfric.commons.cdi.scope.ScopeStrategy;
-import com.ulfric.commons.cdi.scope.Scoped;
 import com.ulfric.commons.spigot.service.ServiceUtils;
+import com.ulfric.dragoon.scope.ScopeStrategy;
+import com.ulfric.dragoon.scope.Scoped;
 
 public enum ServiceScopeStrategy implements ScopeStrategy {
 
