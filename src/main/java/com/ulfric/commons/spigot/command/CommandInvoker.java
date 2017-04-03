@@ -4,8 +4,10 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 
 import com.ulfric.commons.exception.Try;
 import com.ulfric.commons.spigot.command.argument.Argument;
@@ -23,8 +26,10 @@ import com.ulfric.dragoon.construct.InstanceUtils;
 final class CommandInvoker implements CommandExecutor {
 
 	private static final Pattern ARGUMENT_SPLIT_PATTERN = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
+
 	private final Class<? extends Command> command;
 	private final List<Permission> permissions;
+	private final Map<String, PluginCommand> subcommands = new HashMap<>();
 
 	CommandInvoker(Class<? extends Command> command)
 	{
@@ -42,9 +47,29 @@ final class CommandInvoker implements CommandExecutor {
 		return Arrays.asList(permissions.value());
 	}
 
+	void addSubcommand(PluginCommand command)
+	{
+		this.subcommands.put(command.getName(), command);
+		command.getAliases().forEach(alias -> this.subcommands.put(alias, command));
+	}
+
+	void removeSubcommand(PluginCommand command)
+	{
+		this.subcommands.remove(command.getName(), command);
+		command.getAliases().forEach(alias -> this.subcommands.remove(alias, command));
+	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] arguments)
 	{
+		this.enforcePermissions(sender);
+
+		PluginCommand subcommand = this.getSubcommand(arguments);
+		if (subcommand != null)
+		{
+			return subcommand.execute(sender, label, this.getSubcommandArguments(arguments));
+		}
+
 		Context context = Context.builder()
 				.setSender(sender)
 				.setCommand(command)
@@ -55,7 +80,7 @@ final class CommandInvoker implements CommandExecutor {
 
 		try
 		{
-			this.onCommand(context);
+			this.runCommand(context);
 		}
 		catch (CommandException permissionFailure)
 		{
@@ -67,6 +92,36 @@ final class CommandInvoker implements CommandExecutor {
 		}
 
 		return true;
+	}
+
+	private void enforcePermissions(CommandSender sender)
+	{
+		for (Permission permission : this.permissions)
+		{
+			String node = permission.value();
+			if (sender.hasPermission(node))
+			{
+				continue;
+			}
+
+			String name = permission.name();
+			throw new PermissionRequiredException(name.isEmpty() ? node : name);
+		}
+	}
+
+	private PluginCommand getSubcommand(String[] arguments)
+	{
+		if (arguments.length == 0)
+		{
+			return null;
+		}
+
+		return this.subcommands.get(arguments[0].toLowerCase());
+	}
+
+	private String[] getSubcommandArguments(String[] arguments)
+	{
+		return Arrays.copyOfRange(arguments, 1, arguments.length);
 	}
 
 	private List<String> getArguments(String[] enteredArguments)
@@ -102,28 +157,10 @@ final class CommandInvoker implements CommandExecutor {
 		return argument.substring(1, argument.length() - 1);
 	}
 
-	private void onCommand(Context context)
+	private void runCommand(Context context)
 	{
-		this.enforcePermissions(context);
-
 		Command statefulCommand = this.createStatefulCommand(context);
 		statefulCommand.run(context);
-	}
-
-	private void enforcePermissions(Context context)
-	{
-		CommandSender sender = context.getSender();
-		for (Permission permission : this.permissions)
-		{
-			String node = permission.value();
-			if (sender.hasPermission(node))
-			{
-				continue;
-			}
-
-			String name = permission.name();
-			throw new PermissionRequiredException(name.isEmpty() ? node : name);
-		}
 	}
 
 	private Command createStatefulCommand(Context context)

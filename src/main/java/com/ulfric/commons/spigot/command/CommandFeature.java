@@ -3,12 +3,14 @@ package com.ulfric.commons.spigot.command;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 
@@ -21,18 +23,99 @@ import com.ulfric.dragoon.container.Feature;
 
 public final class CommandFeature extends ChildFeature {
 
+	private static final Map<String, PluginCommand> BUKKIT_COMMANDS = CommandFeature.commandMap();
+	private static final Map<Class<?>, PluginCommand> CLASS_TO_COMMAND = new IdentityHashMap<>();
+
+	private static Map<String, PluginCommand> commandMap()
+	{
+		Object commandMapHolder = Try.to(() ->
+			FieldUtils.readDeclaredField(Bukkit.getPluginManager(), "commandMap", true));
+
+		@SuppressWarnings("unchecked")
+		Map<String, PluginCommand> commandMap = (Map<String, PluginCommand>)
+				Try.to(() -> FieldUtils.readDeclaredField(commandMapHolder, "knownCommands", true));
+
+		return commandMap;
+	}
+
 	private final Class<? extends Command> command;
 	private final CommandInvoker schema;
-	private final Map<String, org.bukkit.command.Command> commandMap;
-	private final org.bukkit.command.Command bukkitCommand;
+	private final PluginCommand bukkitCommand;
 
 	public CommandFeature(Feature parent, Command command)
 	{
 		super(parent);
 		this.command = command.getClass();
 		this.schema = this.schema();
-		this.commandMap = this.commandMap();
-		this.bukkitCommand = this.bukkitCommand();
+		this.bukkitCommand = this.getBukkitCommand();
+	}
+
+	@Override
+	public void onEnable()
+	{
+		this.registerCommand();
+	}
+
+	private void registerCommand()
+	{
+		PluginCommand command = this.bukkitCommand;
+
+		CommandInvoker parent = this.getParentCommand();
+		if (parent != null)
+		{
+			parent.addSubcommand(command);
+			return;
+		}
+
+		CommandFeature.BUKKIT_COMMANDS.put(command.getName(), command);
+		command.getAliases().forEach(alias -> CommandFeature.BUKKIT_COMMANDS.put(alias, command));
+	}
+
+	@Override
+	public void onDisable()
+	{
+		this.unregisterCommand();
+	}
+
+	private void unregisterCommand()
+	{
+		PluginCommand command = this.bukkitCommand;
+
+		CommandInvoker parent = this.getParentCommand();
+		if (parent != null)
+		{
+			parent.removeSubcommand(command);
+			return;
+		}
+
+		CommandFeature.BUKKIT_COMMANDS.remove(command.getName(), command);
+		command.getAliases().forEach(alias -> CommandFeature.BUKKIT_COMMANDS.remove(alias, command));
+	}
+
+	private CommandInvoker getParentCommand()
+	{
+		Class<?> superCommand = this.command.getSuperclass();
+
+		if (!Command.class.isAssignableFrom(superCommand))
+		{
+			return null;
+		}
+
+		PluginCommand parent = CommandFeature.CLASS_TO_COMMAND.get(superCommand);
+
+		if (parent == null)
+		{
+			return null;
+		}
+
+		CommandExecutor parentExecutor = parent.getExecutor();
+
+		if (!(parentExecutor instanceof CommandInvoker))
+		{
+			return null;
+		}
+
+		return (CommandInvoker) parentExecutor;
 	}
 
 	private CommandInvoker schema()
@@ -40,27 +123,20 @@ public final class CommandFeature extends ChildFeature {
 		return new CommandInvoker(this.command);
 	}
 
-	private Map<String, org.bukkit.command.Command> commandMap()
+	private PluginCommand getBukkitCommand()
 	{
-		Object commandMapHolder = Try.to(() ->
-			FieldUtils.readDeclaredField(Bukkit.getPluginManager(), "commandMap", true));
-
-		@SuppressWarnings("unchecked")
-		Map<String, org.bukkit.command.Command> commandMap = (Map<String, org.bukkit.command.Command>)
-				Try.to(() -> FieldUtils.readDeclaredField(commandMapHolder, "knownCommands", true));
-
-		return commandMap;
+		return CommandFeature.CLASS_TO_COMMAND.computeIfAbsent(this.command, this::createBukkitCommand);
 	}
 
-	private org.bukkit.command.Command bukkitCommand()
+	private PluginCommand createBukkitCommand(Class<?> command)
 	{
 		String name = Named.tryToGetNameFromAnnotation(this.command)
 				.orElse(command.getClass().getSimpleName().replace("Command", ""));
 		Plugin plugin = PluginUtils.getProvidingPlugin(this.command);
-		return this.createCommand(name, plugin);
+		return this.createPluginCommand(name, plugin);
 	}
 
-	private org.bukkit.command.Command createCommand(String name, Plugin plugin)
+	private PluginCommand createPluginCommand(String name, Plugin plugin)
 	{
 		Constructor<PluginCommand> constructor =
 				Try.to(() -> PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class));
@@ -90,22 +166,6 @@ public final class CommandFeature extends ChildFeature {
 		Command command = InstanceUtils.createOrNull(this.command);
 		Objects.requireNonNull(command, this.command + " must have a no-args constructor");
 		return command.getName();
-	}
-
-	@Override
-	public void onEnable()
-	{
-		org.bukkit.command.Command command = this.bukkitCommand;
-		this.commandMap.put(command.getName(), command);
-		command.getAliases().forEach(alias -> this.commandMap.put(alias, command));
-	}
-
-	@Override
-	public void onDisable()
-	{
-		org.bukkit.command.Command command = this.bukkitCommand;
-		this.commandMap.remove(command.getName(), command);
-		command.getAliases().forEach(alias -> this.commandMap.remove(alias, command));
 	}
 
 }
