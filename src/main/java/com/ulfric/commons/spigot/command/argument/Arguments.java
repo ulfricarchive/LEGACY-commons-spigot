@@ -14,13 +14,18 @@ public enum Arguments {
 
 	;
 
+	private static final Map<Class<?>, List<ArgumentResolver<?>>> RESOLVERS;
+
 	static
 	{
 		RESOLVERS = new IdentityHashMap<>();
-		Arguments.registerResolver(new NameToPlayerArgumentResolver());
+		Arguments.registerDefaultResolvers();
 	}
 
-	private static final Map<Class<?>, List<ArgumentResolver<?>>> RESOLVERS;
+	private static void registerDefaultResolvers()
+	{
+		Arguments.registerResolver(new NameToPlayerArgumentResolver());
+	}
 
 	public static void registerResolver(ArgumentResolver<?> argumentResolver)
 	{
