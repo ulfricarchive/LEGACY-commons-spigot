@@ -2,10 +2,16 @@ package com.ulfric.commons.spigot.plugin;
 
 import java.util.logging.Logger;
 
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.ulfric.commons.service.Service;
+import com.ulfric.commons.spigot.command.Command;
+import com.ulfric.commons.spigot.command.CommandFeature;
 import com.ulfric.commons.spigot.container.ContainerLogger;
+import com.ulfric.commons.spigot.listener.ListenerFeature;
+import com.ulfric.commons.spigot.service.ServiceFeature;
 import com.ulfric.commons.spigot.service.ServiceUtils;
 import com.ulfric.dragoon.ObjectFactory;
 import com.ulfric.dragoon.container.Container;
@@ -23,7 +29,7 @@ public abstract class UlfricPlugin extends JavaPlugin {
 		this.setupPlatform();
 	}
 
-	protected void setupPlatform()
+	private void setupPlatform()
 	{
 		this.createObjectFactoryParentingPluginContainer();
 		this.bindPluginToThis();
@@ -39,7 +45,29 @@ public abstract class UlfricPlugin extends JavaPlugin {
 
 	private ObjectFactory getParentFactory()
 	{
-		return ServiceUtils.getService(ObjectFactory.class).orElseThrow(IllegalStateException::new);
+		ObjectFactory rootFactory = ServiceUtils.getService(ObjectFactory.class);
+		if (rootFactory == null)
+		{
+			rootFactory = ObjectFactory.newInstance();
+			this.setupDefaultBindings(rootFactory);
+			this.registerFeatureWrappers();
+
+			ServiceUtils.register(ObjectFactory.class, rootFactory);
+		}
+		return rootFactory;
+	}
+
+	private void setupDefaultBindings(ObjectFactory factory)
+	{
+		factory.bind(Logger.class).to(ContainerLogger.class);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void registerFeatureWrappers()
+	{
+		Container.registerFeatureWrapper(Listener.class, ListenerFeature::new);
+		Container.registerFeatureWrapper(Service.class, ServiceFeature::new);
+		Container.registerFeatureWrapper(Command.class, CommandFeature::new);
 	}
 
 	private void bindPluginToThis()

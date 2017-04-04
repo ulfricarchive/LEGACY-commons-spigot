@@ -1,7 +1,6 @@
 package com.ulfric.commons.spigot.service;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.bukkit.Bukkit;
@@ -24,10 +23,10 @@ public enum ServiceUtils {
 		Objects.requireNonNull(service);
 		Objects.requireNonNull(provider);
 
-		Optional<S> currentService = ServiceUtils.getService(service);
-		if (currentService.isPresent())
+		S currentService = ServiceUtils.getService(service);
+		if (currentService != null)
 		{
-			return currentService.get();
+			return currentService;
 		}
 
 		S implementation = provider.get();
@@ -55,7 +54,7 @@ public enum ServiceUtils {
 		services.unregister(service, implementation);
 	}
 
-	public static <S extends Service> Optional<S> getService(Class<S> service)
+	public static <S extends Service> S getService(Class<S> service)
 	{
 		Objects.requireNonNull(service);
 
@@ -63,9 +62,9 @@ public enum ServiceUtils {
 		RegisteredServiceProvider<S> provider = services.getRegistration(service);
 		if (provider == null)
 		{
-			return Optional.empty();
+			return null;
 		}
-		return Optional.ofNullable(provider.getProvider());
+		return provider.getProvider();
 	}
 
 }
