@@ -12,6 +12,7 @@ import com.ulfric.commons.spigot.command.CommandFeature;
 import com.ulfric.commons.spigot.container.ContainerLogger;
 import com.ulfric.commons.spigot.listener.ListenerFeature;
 import com.ulfric.commons.spigot.service.ServiceFeature;
+import com.ulfric.commons.spigot.service.ServiceScopeStrategy;
 import com.ulfric.commons.spigot.service.ServiceUtils;
 import com.ulfric.dragoon.ObjectFactory;
 import com.ulfric.dragoon.container.Container;
@@ -60,6 +61,7 @@ public abstract class UlfricPlugin extends JavaPlugin {
 	private void setupDefaultBindings(ObjectFactory factory)
 	{
 		factory.bind(Logger.class).to(ContainerLogger.class);
+		factory.bind(com.ulfric.commons.spigot.service.Service.class).to(ServiceScopeStrategy.class);
 	}
 
 	@SuppressWarnings("unchecked")
