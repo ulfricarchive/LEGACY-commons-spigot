@@ -1,4 +1,4 @@
-package com.ulfric.commons.spigot.locale;
+package com.ulfric.commons.spigot.text;
 
 public final class LocaleDefaults {
 
