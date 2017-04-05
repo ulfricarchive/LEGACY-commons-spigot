@@ -82,13 +82,14 @@ final class CommandInvoker implements CommandExecutor {
 		{
 			this.runCommand(context);
 		}
-		catch (CommandException permissionFailure)
+		catch (CommandException commandFailure)
 		{
 			// TODO tell the player
 		}
 		catch (Exception exception)
 		{
 			// TODO log exception, tell sender there was an error
+			exception.printStackTrace();
 		}
 
 		return true;

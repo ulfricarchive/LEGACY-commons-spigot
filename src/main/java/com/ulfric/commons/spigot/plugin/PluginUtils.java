@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.bukkit.Bukkit;
@@ -39,18 +40,19 @@ public enum PluginUtils {
 		return plugins;
 	}
 
-	public static Plugin getProvidingPlugin(Class<?> loadedClass)
+	public static Plugin getProvidingPluginOrFail(Class<?> loadedClass)
+	{
+		return PluginUtils.getProvidingPlugin(loadedClass)
+				.orElseThrow(() -> new PluginMissingException(loadedClass));
+	}
+
+	public static Optional<Plugin> getProvidingPlugin(Class<?> loadedClass)
 	{
 		Objects.requireNonNull(loadedClass);
 
 		ClassLoader loader = loadedClass.getClassLoader();
 		Plugin pluginContext = PluginUtils.getPluginFromClassLoader(loader);
-		if (pluginContext != null)
-		{
-			return pluginContext;
-		}
-
-		throw new PluginMissingException(loadedClass);
+		return Optional.ofNullable(pluginContext);
 	}
 
 	private static Plugin getPluginFromClassLoader(ClassLoader loader)

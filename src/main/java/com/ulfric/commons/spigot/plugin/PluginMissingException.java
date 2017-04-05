@@ -1,6 +1,5 @@
 package com.ulfric.commons.spigot.plugin;
 
-@SuppressWarnings("serial")
 public class PluginMissingException extends RuntimeException {
 
 	public PluginMissingException(Class<?> lookupClass)

@@ -22,7 +22,7 @@ public final class ListenerFeature extends ChildFeature {
 	@Override
 	public void onEnable()
 	{
-		Plugin owningPlugin = PluginUtils.getProvidingPlugin(this.parent.getClass());
+		Plugin owningPlugin = PluginUtils.getProvidingPluginOrFail(this.parent.getClass());
 		Bukkit.getPluginManager().registerEvents(this.listener, owningPlugin);
 	}
 

@@ -132,7 +132,7 @@ public final class CommandFeature extends ChildFeature {
 	{
 		String name = Named.tryToGetNameFromAnnotation(this.command)
 				.orElse(command.getClass().getSimpleName().replace("Command", ""));
-		Plugin plugin = PluginUtils.getProvidingPlugin(this.command);
+		Plugin plugin = PluginUtils.getProvidingPluginOrFail(this.command);
 		return this.createPluginCommand(name, plugin);
 	}
 

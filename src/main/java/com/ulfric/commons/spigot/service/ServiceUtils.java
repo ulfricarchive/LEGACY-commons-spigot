@@ -41,7 +41,7 @@ public enum ServiceUtils {
 		Objects.requireNonNull(implementation);
 
 		ServicesManager services = Bukkit.getServicesManager();
-		Plugin owner = PluginUtils.getProvidingPlugin(implementation.getClass());
+		Plugin owner = PluginUtils.getProvidingPluginOrFail(implementation.getClass());
 		services.register(service, implementation, owner, ServiceUtils.DEFAULT_SERVICE_PRIORITY);
 	}
 
