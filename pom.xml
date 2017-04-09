@@ -15,12 +15,4 @@
 	<version>1.0.0</version>
 	<name>Commons Spigot</name>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.ulfric</groupId>
-            <artifactId>dragoon</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-    </dependencies>
-
 </project>
