@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -22,6 +23,8 @@ import com.ulfric.commons.exception.Try;
 import com.ulfric.commons.spigot.command.argument.Argument;
 import com.ulfric.commons.spigot.command.argument.ArgumentRequiredException;
 import com.ulfric.commons.spigot.command.argument.Arguments;
+import com.ulfric.commons.spigot.metadata.Metadata;
+import com.ulfric.commons.spigot.text.Text;
 import com.ulfric.dragoon.construct.InstanceUtils;
 
 final class CommandInvoker implements CommandExecutor {
@@ -32,12 +35,14 @@ final class CommandInvoker implements CommandExecutor {
 	private final List<Permission> permissions;
 	private final List<RuleEnforcement> rules;
 	private final Map<String, PluginCommand> subcommands = new HashMap<>();
+	private final Text text;
 
 	CommandInvoker(Class<? extends Command> command)
 	{
 		this.command = command;
 		this.permissions = this.permissions();
 		this.rules = this.rules();
+		this.text = Text.getService();
 	}
 
 	private List<Permission> permissions()
@@ -58,7 +63,9 @@ final class CommandInvoker implements CommandExecutor {
 			return Collections.emptyList();
 		}
 		return Stream.of(rules.value())
+				.map(Rule::value)
 				.map(InstanceUtils::createOrNull)
+				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
 
@@ -77,7 +84,14 @@ final class CommandInvoker implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] arguments)
 	{
-		this.enforcePermissions(sender);
+		try
+		{
+			this.enforcePermissions(sender);
+		}
+		catch (PermissionRequiredException exception)
+		{
+			this.text.sendMessage(sender, exception.getMessage());
+		}
 
 		PluginCommand subcommand = this.getSubcommand(arguments);
 		if (subcommand != null)
@@ -93,13 +107,7 @@ final class CommandInvoker implements CommandExecutor {
 				.setArguments(this.getArguments(arguments))
 				.build();
 
-		for (RuleEnforcement rule : this.rules)
-		{
-			if (!rule.proceed(context))
-			{
-				return true;
-			}
-		}
+		this.enforceRules(context);
 
 		try
 		{
@@ -129,13 +137,22 @@ final class CommandInvoker implements CommandExecutor {
 			}
 
 			String name = permission.name();
+			Metadata.write(sender, "command-no-permission", name.isEmpty() ? node : name);
 			throw new PermissionRequiredException(name.isEmpty() ? node : name);
 		}
 	}
 
-	private void enforceRules(Context context)
+	private boolean enforceRules(Context context)
 	{
+		for (RuleEnforcement rule : this.rules)
+		{
+			if (!rule.proceed(context))
+			{
+				return false;
+			}
+		}
 
+		return true;
 	}
 
 	private PluginCommand getSubcommand(String[] arguments)
