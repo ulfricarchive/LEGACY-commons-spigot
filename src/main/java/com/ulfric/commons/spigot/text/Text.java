@@ -12,9 +12,14 @@ import com.ulfric.commons.version.Version;
 @Version(1)
 public interface Text extends Service {
 
-	public static Text getService()
+	static Text getService()
 	{
 		return ServiceUtils.getService(Text.class);
+	}
+
+	default void sendMessage(CommandSender target, String code)
+	{
+		target.sendMessage(this.getMessage(target, code));
 	}
 
 	String getMessage(CommandSender target, String code);

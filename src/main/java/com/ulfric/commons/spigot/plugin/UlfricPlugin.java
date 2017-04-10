@@ -6,6 +6,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.ulfric.commons.spigot.container.ContainerLogger;
+import com.ulfric.commons.spigot.intercept.RequirePermission;
+import com.ulfric.commons.spigot.intercept.RequirePermissionInterceptor;
 import com.ulfric.dragoon.ObjectFactory;
 import com.ulfric.dragoon.container.Container;
 import com.ulfric.dragoon.scope.Supplied;
@@ -33,6 +35,7 @@ public abstract class UlfricPlugin extends JavaPlugin {
 		scope.register(ContainerLogger.class, () -> new ContainerLogger(this));
 		factory.bind(Plugin.class).to(this.getClass());
 		factory.bind(Logger.class).to(ContainerLogger.class);
+		factory.bind(RequirePermission.class).to(RequirePermissionInterceptor.class);
 	}
 
 	private Class<Object> getThisClassAsObject()
