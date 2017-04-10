@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.bukkit.command.CommandExecutor;
@@ -29,12 +30,14 @@ final class CommandInvoker implements CommandExecutor {
 
 	private final Class<? extends Command> command;
 	private final List<Permission> permissions;
+	private final List<RuleEnforcement> rules;
 	private final Map<String, PluginCommand> subcommands = new HashMap<>();
 
 	CommandInvoker(Class<? extends Command> command)
 	{
 		this.command = command;
 		this.permissions = this.permissions();
+		this.rules = this.rules();
 	}
 
 	private List<Permission> permissions()
@@ -45,6 +48,18 @@ final class CommandInvoker implements CommandExecutor {
 			return Collections.emptyList();
 		}
 		return Arrays.asList(permissions.value());
+	}
+
+	private List<RuleEnforcement> rules()
+	{
+		Rules rules = this.command.getAnnotation(Rules.class);
+		if (rules == null)
+		{
+			return Collections.emptyList();
+		}
+		return Stream.of(rules.value())
+				.map(InstanceUtils::createOrNull)
+				.collect(Collectors.toList());
 	}
 
 	void addSubcommand(PluginCommand command)
@@ -78,6 +93,14 @@ final class CommandInvoker implements CommandExecutor {
 				.setArguments(this.getArguments(arguments))
 				.build();
 
+		for (RuleEnforcement rule : this.rules)
+		{
+			if (!rule.proceed(context))
+			{
+				return true;
+			}
+		}
+
 		try
 		{
 			this.runCommand(context);
@@ -108,6 +131,11 @@ final class CommandInvoker implements CommandExecutor {
 			String name = permission.name();
 			throw new PermissionRequiredException(name.isEmpty() ? node : name);
 		}
+	}
+
+	private void enforceRules(Context context)
+	{
+
 	}
 
 	private PluginCommand getSubcommand(String[] arguments)
