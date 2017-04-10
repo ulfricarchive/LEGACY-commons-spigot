@@ -5,6 +5,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public enum Metadata {
@@ -13,21 +14,14 @@ public enum Metadata {
 
 	private static final Map<Class<?>, Map<Object, Map<Object, Object>>> METADATA = new IdentityHashMap<>();
 
-	public static void write(Player holder, String key, Object value)
+	public static void write(Object holder, String key, Object value)
 	{
 		Map<Object, Object> data = Metadata.getOrCreateHolder(holder);
 
 		data.put(key, value);
 	}
 
-	public static void write(CommandSender holder, String key, Object value)
-	{
-		Map<Object, Object> data = Metadata.getOrCreateHolder(holder);
-
-		data.put(key, value);
-	}
-
-	public static Object read(Player holder, String key)
+	public static Object read(Entity holder, String key)
 	{
 		Map<Object, Object> data = Metadata.getOrCreateHolder(holder);
 
@@ -65,20 +59,27 @@ public enum Metadata {
 		return null;
 	}
 
-	private static Map<Object, Object> getOrCreateHolder(Player holder)
+	private static Map<Object, Object> getOrCreateHolder(Object holder)
 	{
 		Map<Object, Map<Object, Object>> metadatables =
 				Metadata.METADATA.computeIfAbsent(holder.getClass(), ignored -> new HashMap<>());
 
-		return metadatables.computeIfAbsent(holder.getUniqueId(), ignored -> new HashMap<>());
-	}
+		Object key;
 
-	private static Map<Object, Object> getOrCreateHolder(CommandSender holder)
-	{
-		Map<Object, Map<Object, Object>> metadatables =
-				Metadata.METADATA.computeIfAbsent(holder.getClass(), ignored -> new HashMap<>());
+		if (holder instanceof Entity)
+		{
+			key = ((Entity) holder).getUniqueId();
+		}
+		else if (holder instanceof CommandSender)
+		{
+			key = ((CommandSender) holder).getName();
+		}
+		else
+		{
+			throw new IllegalArgumentException("Must be Entity / CommandSender");
+		}
 
-		return metadatables.computeIfAbsent(holder.getName(), ignored -> new HashMap<>());
+		return metadatables.computeIfAbsent(key, ignored -> new HashMap<>());
 	}
 
 }
