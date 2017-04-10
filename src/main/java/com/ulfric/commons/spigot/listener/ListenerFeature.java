@@ -1,4 +1,4 @@
-package com.ulfric.commons.spigot.container;
+package com.ulfric.commons.spigot.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -11,18 +11,18 @@ import com.ulfric.dragoon.container.Feature;
 
 public final class ListenerFeature extends ChildFeature {
 
+	private final Listener listener;
+
 	public ListenerFeature(Feature parent, Listener listener)
 	{
 		super(parent);
 		this.listener = listener;
 	}
 
-	private final Listener listener;
-
 	@Override
 	public void onEnable()
 	{
-		Plugin owningPlugin = PluginUtils.getProvidingPlugin(this.parent.getClass());
+		Plugin owningPlugin = PluginUtils.getProvidingPluginOrFail(this.parent.getClass());
 		Bukkit.getPluginManager().registerEvents(this.listener, owningPlugin);
 	}
 
