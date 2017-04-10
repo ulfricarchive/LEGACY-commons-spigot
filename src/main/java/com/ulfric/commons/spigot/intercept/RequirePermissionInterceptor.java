@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEvent;
 
+import com.ulfric.commons.spigot.metadata.Metadata;
+import com.ulfric.commons.spigot.metadata.MetadataDefaults;
 import com.ulfric.commons.spigot.text.Text;
 import com.ulfric.dragoon.intercept.Context;
 import com.ulfric.dragoon.intercept.Interceptor;
@@ -17,10 +19,13 @@ public class RequirePermissionInterceptor implements Interceptor {
 	public Object intercept(Context context)
 	{
 		RequirePermission annotation = context.getDestinationExecutable().getAnnotation(RequirePermission.class);
-		Player player = this.extractPlayerFromArguments(context.getArguments()).orElseThrow(this::cantFindPlayer);
+
+		Player player = this.extractPlayerFromArguments(context.getArguments())
+				.orElseThrow(() -> new IllegalArgumentException("Player could not be extracted from arguments"));
 
 		if (!player.hasPermission(annotation.permission()))
 		{
+			Metadata.write(player, MetadataDefaults.NO_PERMISSION, annotation.permission());
 			this.text.sendMessage(player, annotation.message());
 			return null;
 		}
@@ -56,11 +61,6 @@ public class RequirePermissionInterceptor implements Interceptor {
 		}
 
 		return null;
-	}
-
-	private IllegalArgumentException cantFindPlayer()
-	{
-		return new IllegalArgumentException("Player could not be extracted from arguments");
 	}
 
 }
