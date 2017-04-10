@@ -11,32 +11,32 @@ public enum Metadata {
 
 	;
 
-	private static final Map<Class<?>, Map<String, MetadataHolder>> METADATA = new IdentityHashMap<>();
+	private static final Map<Class<?>, Map<Object, Map<Object, Object>>> METADATA = new IdentityHashMap<>();
 
 	public static void write(Player holder, String key, Object value)
 	{
-		MetadataHolder data = Metadata.getOrCreateHolder(holder);
+		Map<Object, Object> data = Metadata.getOrCreateHolder(holder);
 
-		data.set(key, value);
+		data.put(key, value);
 	}
 
 	public static void write(CommandSender holder, String key, Object value)
 	{
-		MetadataHolder data = Metadata.getOrCreateHolder(holder);
+		Map<Object, Object> data = Metadata.getOrCreateHolder(holder);
 
-		data.set(key, value);
+		data.put(key, value);
 	}
 
 	public static Object read(Player holder, String key)
 	{
-		MetadataHolder data = Metadata.getOrCreateHolder(holder);
+		Map<Object, Object> data = Metadata.getOrCreateHolder(holder);
 
 		return data.get(key);
 	}
 
 	public static Object read(CommandSender holder, String key)
 	{
-		MetadataHolder data = Metadata.getOrCreateHolder(holder);
+		Map<Object, Object> data = Metadata.getOrCreateHolder(holder);
 
 		return data.get(key);
 	}
@@ -65,20 +65,20 @@ public enum Metadata {
 		return null;
 	}
 
-	private static MetadataHolder getOrCreateHolder(Player holder)
+	private static Map<Object, Object> getOrCreateHolder(Player holder)
 	{
-		Map<String, MetadataHolder> metadatables =
+		Map<Object, Map<Object, Object>> metadatables =
 				Metadata.METADATA.computeIfAbsent(holder.getClass(), ignored -> new HashMap<>());
 
-		return metadatables.computeIfAbsent(holder.getUniqueId().toString(), ignored -> new MetadataHolder());
+		return metadatables.computeIfAbsent(holder.getUniqueId(), ignored -> new HashMap<>());
 	}
 
-	private static MetadataHolder getOrCreateHolder(CommandSender holder)
+	private static Map<Object, Object> getOrCreateHolder(CommandSender holder)
 	{
-		Map<String, MetadataHolder> metadatables =
+		Map<Object, Map<Object, Object>> metadatables =
 				Metadata.METADATA.computeIfAbsent(holder.getClass(), ignored -> new HashMap<>());
 
-		return metadatables.computeIfAbsent(holder.getName(), ignored -> new MetadataHolder());
+		return metadatables.computeIfAbsent(holder.getName(), ignored -> new HashMap<>());
 	}
 
 }
