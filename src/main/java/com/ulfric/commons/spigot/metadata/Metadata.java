@@ -1,25 +1,41 @@
 package com.ulfric.commons.spigot.metadata;
 
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.metadata.Metadatable;
-import org.bukkit.plugin.Plugin;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
-import com.ulfric.commons.spigot.plugin.PluginUtils;
-import com.ulfric.commons.spigot.plugin.UlfricPlugin;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 public enum Metadata {
 
 	;
 
-	public static void write(Metadatable holder, String key, Object value)
+	private static final Map<Class<?>, Map<Object, Map<Object, Object>>> METADATA = new IdentityHashMap<>();
+
+	public static void write(Object holder, String key, Object value)
 	{
-		Plugin plugin = PluginUtils.getProvidingPlugin(value.getClass())
-				.orElseGet(() -> PluginUtils.getProvidingPluginOrFail(UlfricPlugin.class));
-		holder.setMetadata(key, new FixedMetadataValue(plugin, value));
+		Map<Object, Object> data = Metadata.getOrCreateHolder(holder);
+
+		data.put(key, value);
 	}
 
-	public static String readString(Metadatable holder, String key)
+	public static Object read(Entity holder, String key)
+	{
+		Map<Object, Object> data = Metadata.getOrCreateHolder(holder);
+
+		return data.get(key);
+	}
+
+	public static Object read(CommandSender holder, String key)
+	{
+		Map<Object, Object> data = Metadata.getOrCreateHolder(holder);
+
+		return data.get(key);
+	}
+
+	public static String readString(Player holder, String key)
 	{
 		Object value = Metadata.read(holder, key);
 
@@ -31,29 +47,39 @@ public enum Metadata {
 		return null;
 	}
 
-	public static Object read(Metadatable holder, String key)
+	public static String readString(CommandSender holder, String key)
 	{
-		MetadataValue metadata = Metadata.getMetadata(holder, key);
+		Object value = Metadata.read(holder, key);
 
-		if (metadata == null)
+		if (value instanceof String)
 		{
-			return null;
-		}
-
-		return metadata.value();
-	}
-
-	public static MetadataValue getMetadata(Metadatable holder, String key)
-	{
-		for (MetadataValue value : holder.getMetadata(key))
-		{
-			if (value.getOwningPlugin() instanceof UlfricPlugin)
-			{
-				return value;
-			}
+			return (String) value;
 		}
 
 		return null;
+	}
+
+	private static Map<Object, Object> getOrCreateHolder(Object holder)
+	{
+		Map<Object, Map<Object, Object>> metadatables =
+				Metadata.METADATA.computeIfAbsent(holder.getClass(), ignored -> new HashMap<>());
+
+		Object key;
+
+		if (holder instanceof Entity)
+		{
+			key = ((Entity) holder).getUniqueId();
+		}
+		else if (holder instanceof CommandSender)
+		{
+			key = ((CommandSender) holder).getName();
+		}
+		else
+		{
+			throw new IllegalArgumentException("Must be Entity / CommandSender");
+		}
+
+		return metadatables.computeIfAbsent(key, ignored -> new HashMap<>());
 	}
 
 }
