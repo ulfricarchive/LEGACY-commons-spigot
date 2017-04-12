@@ -1,6 +1,8 @@
 package com.ulfric.commons.spigot.data;
 
-public interface Data {
+import com.ulfric.commons.service.Service;
+
+public interface Data extends Service {
 
 	DataStore getDataStore(String category);
 

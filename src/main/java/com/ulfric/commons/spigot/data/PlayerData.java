@@ -2,11 +2,13 @@ package com.ulfric.commons.spigot.data;
 
 import java.util.UUID;
 
+import com.ulfric.commons.spigot.service.ServiceUtils;
+
 public interface PlayerData extends Data {
 
 	public static PlayerData getService()
 	{
-		throw new UnsupportedOperationException();
+		return ServiceUtils.getService(PlayerData.class);
 	}
 
 	DataStore getDataStore();
