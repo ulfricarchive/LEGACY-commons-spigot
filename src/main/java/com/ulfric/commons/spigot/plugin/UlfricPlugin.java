@@ -9,11 +9,12 @@ import com.ulfric.commons.spigot.container.ContainerLogger;
 import com.ulfric.commons.spigot.intercept.RequirePermission;
 import com.ulfric.commons.spigot.intercept.RequirePermissionInterceptor;
 import com.ulfric.dragoon.ObjectFactory;
+import com.ulfric.dragoon.container.Extensible;
 import com.ulfric.dragoon.scope.Supplied;
 import com.ulfric.dragoon.scope.SuppliedScopeStrategy;
 
 @Supplied
-public abstract class UlfricPlugin extends JavaPlugin {
+public abstract class UlfricPlugin extends JavaPlugin implements Extensible<Class<?>> {
 
 	private final ObjectFactory containerFactory;
 	private PluginContainer container;
@@ -43,6 +44,7 @@ public abstract class UlfricPlugin extends JavaPlugin {
 		return casted;
 	}
 
+	@Override
 	public final void install(Class<?> feature)
 	{
 		this.container.install(feature);
