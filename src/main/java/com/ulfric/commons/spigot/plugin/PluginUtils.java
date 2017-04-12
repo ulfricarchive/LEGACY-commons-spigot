@@ -40,6 +40,11 @@ public enum PluginUtils {
 		return plugins;
 	}
 
+	public static Plugin getMainPlugin()
+	{
+		return PluginUtils.getProvidingPluginOrFail(UlfricPlugin.class);
+	}
+
 	public static Plugin getProvidingPluginOrFail(Class<?> loadedClass)
 	{
 		return PluginUtils.getProvidingPlugin(loadedClass)
