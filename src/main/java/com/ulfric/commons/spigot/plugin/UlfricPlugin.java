@@ -9,7 +9,6 @@ import com.ulfric.commons.spigot.container.ContainerLogger;
 import com.ulfric.commons.spigot.intercept.RequirePermission;
 import com.ulfric.commons.spigot.intercept.RequirePermissionInterceptor;
 import com.ulfric.dragoon.ObjectFactory;
-import com.ulfric.dragoon.container.Container;
 import com.ulfric.dragoon.scope.Supplied;
 import com.ulfric.dragoon.scope.SuppliedScopeStrategy;
 
@@ -17,13 +16,11 @@ import com.ulfric.dragoon.scope.SuppliedScopeStrategy;
 public abstract class UlfricPlugin extends JavaPlugin {
 
 	private final ObjectFactory containerFactory;
-	private final PluginContainer container;
+	private PluginContainer container;
 
 	public UlfricPlugin()
 	{
 		this.containerFactory = RootObjectFactory.getRootObjectFactory().requestExact(ObjectFactory.class);
-		this.container = this.containerFactory.requestExact(PluginContainer.class);
-
 		this.setupPlatform();
 	}
 
@@ -46,15 +43,15 @@ public abstract class UlfricPlugin extends JavaPlugin {
 		return casted;
 	}
 
-	public final Container getContainer()
+	public final void install(Class<?> feature)
 	{
-		return this.container;
+		this.container.install(feature);
 	}
 
 	@Override
 	public final void onLoad()
 	{
-		this.container.load();
+		this.container = this.containerFactory.requestExact(PluginContainer.class);
 		this.init();
 	}
 
