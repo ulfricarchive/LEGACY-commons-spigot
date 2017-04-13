@@ -3,6 +3,7 @@ package com.ulfric.commons.spigot.metadata;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -66,7 +67,11 @@ public enum Metadata {
 
 		Object key;
 
-		if (holder instanceof Entity)
+		if (holder instanceof UUID)
+		{
+			key = holder;
+		}
+		else if (holder instanceof Entity)
 		{
 			key = ((Entity) holder).getUniqueId();
 		}
