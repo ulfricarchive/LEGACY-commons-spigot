@@ -1,8 +1,11 @@
 package com.ulfric.commons.spigot.data;
 
-import com.ulfric.commons.data.Persistent;
+import java.util.Set;
 
-public interface PersistentData extends Persistent {
+import com.ulfric.commons.data.Persistent;
+import com.ulfric.commons.naming.Named;
+
+public interface PersistentData extends Named, Persistent {
 
 	void set(String path, Object value);
 
@@ -11,5 +14,7 @@ public interface PersistentData extends Persistent {
 	String getString(String path);
 
 	int getInt(String path);
+
+	Set<String> getKeys();
 
 }
