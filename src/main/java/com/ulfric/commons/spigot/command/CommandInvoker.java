@@ -1,5 +1,6 @@
 package com.ulfric.commons.spigot.command;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 
 import com.ulfric.commons.exception.Try;
+import com.ulfric.commons.reflect.AnnotationUtils;
 import com.ulfric.commons.spigot.command.argument.Argument;
 import com.ulfric.commons.spigot.command.argument.ArgumentRequiredException;
 import com.ulfric.commons.spigot.command.argument.Arguments;
@@ -57,13 +59,17 @@ final class CommandInvoker implements CommandExecutor {
 
 	private List<RuleEnforcement> rules()
 	{
-		Rules rules = this.command.getAnnotation(Rules.class);
-		if (rules == null)
+		List<Annotation> annotations = AnnotationUtils.getLeafAnnotations(this.command.getClass(), Rule.class);
+		if (annotations.isEmpty())
 		{
 			return Collections.emptyList();
 		}
-		return Stream.of(rules.value())
+
+		return annotations.stream()
+				.map(annotation -> annotation.annotationType().getAnnotation(Rules.class))
+				.flatMap(rules -> Stream.of(rules.value()))
 				.map(Rule::value)
+				.distinct()
 				.map(InstanceUtils::createOrNull)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
@@ -115,10 +121,9 @@ final class CommandInvoker implements CommandExecutor {
 		}
 		catch (RuleNotPassedException exception)
 		{
-			sender.sendMessage(
-					this.text.getMessage(sender, exception.getMessage()) +
-					this.text.getMessage(sender, exception.getDetail())
-			);
+			Metadata.write(sender, "rule-failed", exception.getDetail());
+
+			this.text.sendMessage(sender, exception.getMessage());
 
 			return false;
 		}
