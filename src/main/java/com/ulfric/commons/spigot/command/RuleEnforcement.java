@@ -1,7 +1,9 @@
 package com.ulfric.commons.spigot.command;
 
-public interface RuleEnforcement {
+import java.util.function.Predicate;
 
-	boolean proceed(Context context);
+import com.ulfric.commons.naming.Named;
+
+public interface RuleEnforcement extends Named, Predicate<Context> {
 
 }

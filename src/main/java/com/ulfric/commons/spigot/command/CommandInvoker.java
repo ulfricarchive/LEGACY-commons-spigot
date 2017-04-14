@@ -91,6 +91,8 @@ final class CommandInvoker implements CommandExecutor {
 		catch (PermissionRequiredException exception)
 		{
 			this.text.sendMessage(sender, exception.getMessage());
+
+			return false;
 		}
 
 		PluginCommand subcommand = this.getSubcommand(arguments);
@@ -107,7 +109,19 @@ final class CommandInvoker implements CommandExecutor {
 				.setArguments(this.getArguments(arguments))
 				.build();
 
-		this.enforceRules(context);
+		try
+		{
+			this.enforceRules(context);
+		}
+		catch (RuleNotPassedException exception)
+		{
+			sender.sendMessage(
+					this.text.getMessage(sender, exception.getMessage()) +
+					this.text.getMessage(sender, exception.getDetail())
+			);
+
+			return false;
+		}
 
 		try
 		{
@@ -146,7 +160,7 @@ final class CommandInvoker implements CommandExecutor {
 	{
 		for (RuleEnforcement rule : this.rules)
 		{
-			if (!rule.proceed(context))
+			if (!rule.test(context))
 			{
 				return false;
 			}
