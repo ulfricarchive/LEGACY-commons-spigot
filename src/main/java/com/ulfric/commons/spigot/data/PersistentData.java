@@ -1,8 +1,8 @@
 package com.ulfric.commons.spigot.data;
 
-public interface PersistentData {
+import com.ulfric.commons.data.Persistent;
 
-	void save();
+public interface PersistentData extends Persistent {
 
 	void set(String path, Object value);
 
