@@ -8,6 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.ulfric.commons.spigot.container.ContainerLogger;
 import com.ulfric.commons.spigot.intercept.RequirePermission;
 import com.ulfric.commons.spigot.intercept.RequirePermissionInterceptor;
+import com.ulfric.commons.spigot.service.BukkitService;
+import com.ulfric.commons.spigot.service.BukkitServiceScopeStrategy;
 import com.ulfric.dragoon.ObjectFactory;
 import com.ulfric.dragoon.container.Extensible;
 import com.ulfric.dragoon.scope.Supplied;
@@ -31,6 +33,7 @@ public abstract class UlfricPlugin extends JavaPlugin implements Extensible<Clas
 		SuppliedScopeStrategy scope = (SuppliedScopeStrategy) factory.request(Supplied.class);
 		scope.register(this.getThisClassAsObject(), () -> this);
 		scope.register(ContainerLogger.class, () -> new ContainerLogger(this));
+		factory.bind(BukkitService.class).to(BukkitServiceScopeStrategy.class);
 		factory.bind(Plugin.class).to(this.getClass());
 		factory.bind(Logger.class).to(ContainerLogger.class);
 		factory.bind(RequirePermission.class).to(RequirePermissionInterceptor.class);
