@@ -8,9 +8,12 @@ import com.ulfric.commons.naming.Name;
 public class MustBePlayerEnforcement implements RuleEnforcement {
 
 	@Override
-	public boolean test(Context context)
+	public void accept(Context context)
 	{
-		return context.getSender() instanceof Player;
+		if (!(context.getSender() instanceof Player))
+		{
+			throw new RuleNotPassedException(this);
+		}
 	}
 
 }

@@ -161,17 +161,12 @@ final class CommandInvoker implements CommandExecutor {
 		}
 	}
 
-	private boolean enforceRules(Context context)
+	private void enforceRules(Context context)
 	{
 		for (RuleEnforcement rule : this.rules)
 		{
-			if (!rule.test(context))
-			{
-				return false;
-			}
+			rule.accept(context);
 		}
-
-		return true;
 	}
 
 	private PluginCommand getSubcommand(String[] arguments)
