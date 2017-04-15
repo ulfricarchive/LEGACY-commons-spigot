@@ -1,5 +1,6 @@
 package com.ulfric.commons.spigot.data;
 
+import java.util.List;
 import java.util.Set;
 
 import com.ulfric.commons.data.Persistent;
@@ -12,6 +13,8 @@ public interface PersistentData extends Named, Persistent {
 	PersistentData getSection(String path);
 
 	String getString(String path);
+
+	List<String> getStringList(String path);
 
 	int getInt(String path);
 
