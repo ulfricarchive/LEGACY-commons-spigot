@@ -25,6 +25,7 @@ public enum Arguments {
 	private static void registerDefaultResolvers()
 	{
 		Arguments.registerResolver(new NameToPlayerArgumentResolver());
+		Arguments.registerResolver(new PermissionEntityArgumentResolver());
 	}
 
 	public static void registerResolver(ArgumentResolver<?> argumentResolver)
