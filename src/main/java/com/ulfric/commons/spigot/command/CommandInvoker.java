@@ -67,7 +67,8 @@ final class CommandInvoker implements CommandExecutor {
 
 		return annotations.stream()
 				.map(annotation -> annotation.annotationType().getAnnotation(Rules.class))
-				.flatMap(rules -> Stream.of(rules.value()))
+				.map(Rules::value)
+				.flatMap(Stream::of)
 				.map(Rule::value)
 				.distinct()
 				.map(InstanceUtils::createOrNull)
