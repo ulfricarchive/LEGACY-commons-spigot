@@ -9,7 +9,7 @@ public interface PersistentData extends Named, Persistent {
 
 	void set(String path, Object value);
 
-	Object get(String path);
+	PersistentData getSection(String path);
 
 	String getString(String path);
 
