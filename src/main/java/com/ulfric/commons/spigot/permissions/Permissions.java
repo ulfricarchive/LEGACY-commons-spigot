@@ -17,4 +17,6 @@ public interface Permissions extends Service {
 
 	PermissionEntity getPermissionEntity(Identity identity);
 
+	void writePermissionEntity(PermissionEntity entity);
+
 }

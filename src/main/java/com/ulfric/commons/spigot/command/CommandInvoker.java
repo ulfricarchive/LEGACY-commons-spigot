@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -26,7 +25,7 @@ import com.ulfric.commons.spigot.command.argument.Argument;
 import com.ulfric.commons.spigot.command.argument.ArgumentRequiredException;
 import com.ulfric.commons.spigot.command.argument.Arguments;
 import com.ulfric.commons.spigot.metadata.Metadata;
-import com.ulfric.commons.spigot.text.Text;
+import com.ulfric.commons.spigot.metadata.MetadataDefaults;
 import com.ulfric.dragoon.construct.InstanceUtils;
 
 final class CommandInvoker implements CommandExecutor {
@@ -34,22 +33,22 @@ final class CommandInvoker implements CommandExecutor {
 	private static final Pattern ARGUMENT_SPLIT_PATTERN = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
 
 	private final Class<? extends Command> command;
-	private final List<Permission> permissions;
+	private final List<String> permissions;
 	private final List<RuleEnforcement> rules;
-	private final Map<String, PluginCommand> subcommands = new HashMap<>();
-	private final Text text;
+	private final Map<String, CommandInvoker> subcommands = new HashMap<>();
+	private final List<Field> arguments;
 
 	CommandInvoker(Class<? extends Command> command)
 	{
 		this.command = command;
 		this.permissions = this.permissions();
 		this.rules = this.rules();
-		this.text = Text.getService();
+		this.arguments = this.arguments();
 	}
 
-	private List<Permission> permissions()
+	private List<String> permissions()
 	{
-		Permissions permissions = this.command.getAnnotation(Permissions.class);
+		Permission permissions = this.command.getAnnotation(Permission.class);
 		if (permissions == null)
 		{
 			return Collections.emptyList();
@@ -76,16 +75,53 @@ final class CommandInvoker implements CommandExecutor {
 				.collect(Collectors.toList());
 	}
 
+	private List<Field> arguments()
+	{
+		List<List<Field>> arguments = this.getAllArgumentFields();
+		Collections.reverse(arguments);
+		return arguments.stream()
+				.flatMap(List::stream)
+				.filter(field -> field.isAnnotationPresent(Argument.class))
+				.peek(field -> field.setAccessible(true))
+				.collect(Collectors.toList());
+	}
+
+	private List<List<Field>> getAllArgumentFields()
+	{
+		List<List<Field>> arguments = new ArrayList<>();
+		Class<?> command = this.command;
+		do
+		{
+			List<Field> fields = Arrays.asList(command.getDeclaredFields());
+			arguments.add(fields);
+
+			command = command.getSuperclass();
+		}
+		while (command != Object.class);
+		return arguments;
+	}
+
 	void addSubcommand(PluginCommand command)
 	{
-		this.subcommands.put(command.getName(), command);
-		command.getAliases().forEach(alias -> this.subcommands.put(alias, command));
+		CommandExecutor executor = command.getExecutor();
+		if (executor instanceof CommandInvoker)
+		{
+			CommandInvoker subcommand = (CommandInvoker) executor;
+			if (this.command.isAssignableFrom(subcommand.command))
+			{
+				this.subcommands.put(command.getName(), subcommand);
+				command.getAliases().forEach(alias -> this.subcommands.put(alias, subcommand));
+				return;
+			}
+		}
+
+		throw new IllegalArgumentException(command.getPlugin().getName() + ':' + command.getName());
 	}
 
 	void removeSubcommand(PluginCommand command)
 	{
-		this.subcommands.remove(command.getName(), command);
-		command.getAliases().forEach(alias -> this.subcommands.remove(alias, command));
+		this.subcommands.remove(command.getName(), command.getExecutor());
+		command.getAliases().forEach(alias -> this.subcommands.remove(alias, command.getExecutor()));
 	}
 
 	@Override
@@ -93,72 +129,96 @@ final class CommandInvoker implements CommandExecutor {
 	{
 		try
 		{
-			this.enforcePermissions(sender);
+			Context context = this.createContext(sender, command, label, arguments);
+			this.handleCommand(context, new ArrayList<>(context.getArguments()));
 		}
-		catch (PermissionRequiredException exception)
+		catch (Exception ignore)
 		{
-			this.text.sendMessage(sender, exception.getMessage());
-
-			return false;
+			// TODO
+			ignore.printStackTrace();
 		}
-
-		PluginCommand subcommand = this.getSubcommand(arguments);
-		if (subcommand != null)
-		{
-			return subcommand.execute(sender, label, this.getSubcommandArguments(arguments));
-		}
-
-		Context context = Context.builder()
-				.setSender(sender)
-				.setCommand(command)
-				.setLabel(label)
-				.setEnteredArguments(arguments)
-				.setArguments(this.getArguments(arguments))
-				.build();
-
-		try
-		{
-			this.enforceRules(context);
-		}
-		catch (RuleNotPassedException exception)
-		{
-			Metadata.write(sender, "rule-failed", exception.getDetail());
-
-			this.text.sendMessage(sender, exception.getMessage());
-
-			return false;
-		}
-
-		try
-		{
-			this.runCommand(context);
-		}
-		catch (CommandException commandFailure)
-		{
-			// TODO tell the player
-		}
-		catch (Exception exception)
-		{
-			// TODO log exception, tell sender there was an error
-			exception.printStackTrace();
-		}
-
 		return true;
 	}
 
-	private void enforcePermissions(CommandSender sender)
+	private void handleCommand(Context context, List<String> remainingArguments)
 	{
-		for (Permission permission : this.permissions)
+		this.enforcePermissions(context.getSender());
+		this.enforceRules(context);
+
+		CommandInvoker subcommand = this.getSubCommand(remainingArguments);
+		if (subcommand != null)
 		{
-			String node = permission.value();
-			if (sender.hasPermission(node))
+			subcommand.handleCommand(context, remainingArguments);
+			return;
+		}
+
+		this.createCommand(context, remainingArguments).run(context);
+	}
+
+	private Command createCommand(Context context, List<String> remainingArguments)
+	{
+		Command command = InstanceUtils.createOrNull(this.command);
+
+		// TODO allow arguments to contest each other for the best match
+		for (Field argument : this.arguments) arguments:
+		{
+			Argument argumentDefinition = argument.getAnnotation(Argument.class);
+
+			Iterator<String> arguments = remainingArguments.iterator();
+			while (arguments.hasNext())
+			{
+				Object pojoArgument = Arguments.resolve(context, arguments.next(), argument.getType());
+				if (pojoArgument != null)
+				{
+					Try.to(() -> argument.set(command, pojoArgument));
+					arguments.remove();
+					break arguments;
+				}
+			}
+
+			if (argumentDefinition.optional())
 			{
 				continue;
 			}
 
-			String name = permission.name();
-			Metadata.write(sender, "command-no-permission", name.isEmpty() ? node : name);
-			throw new PermissionRequiredException(name.isEmpty() ? node : name);
+			throw new ArgumentRequiredException(argument.getName());
+		}
+
+		return command;
+	}
+
+	private CommandInvoker getSubCommand(List<String> remainingArguments)
+	{
+		if (remainingArguments.isEmpty() || this.subcommands.isEmpty())
+		{
+			return null;
+		}
+
+		Iterator<String> arguments = remainingArguments.iterator();
+		while (arguments.hasNext())
+		{
+			CommandInvoker subcommand = this.subcommands.get(arguments.next());
+			if (subcommand == null)
+			{
+				continue;
+			}
+			arguments.remove();
+			return subcommand;
+		}
+		return null;
+	}
+
+	private void enforcePermissions(CommandSender sender)
+	{
+		for (String permission : this.permissions)
+		{
+			if (sender.hasPermission(permission))
+			{
+				continue;
+			}
+
+			Metadata.write(sender, MetadataDefaults.NO_PERMISSION, permission);
+			throw new PermissionRequiredException(permission);
 		}
 	}
 
@@ -170,19 +230,15 @@ final class CommandInvoker implements CommandExecutor {
 		}
 	}
 
-	private PluginCommand getSubcommand(String[] arguments)
+	private Context createContext(CommandSender sender, org.bukkit.command.Command command, String label, String[] arguments)
 	{
-		if (arguments.length == 0)
-		{
-			return null;
-		}
-
-		return this.subcommands.get(arguments[0].toLowerCase());
-	}
-
-	private String[] getSubcommandArguments(String[] arguments)
-	{
-		return Arrays.copyOfRange(arguments, 1, arguments.length);
+		return Context.builder()
+				.setSender(sender)
+				.setCommand(command)
+				.setLabel(label)
+				.setEnteredArguments(arguments)
+				.setArguments(this.getArguments(arguments))
+				.build();
 	}
 
 	private List<String> getArguments(String[] enteredArguments)
@@ -216,68 +272,6 @@ final class CommandInvoker implements CommandExecutor {
 	private String cleanMultiWordArgument(String argument)
 	{
 		return argument.substring(1, argument.length() - 1);
-	}
-
-	private void runCommand(Context context)
-	{
-		Command statefulCommand = this.createStatefulCommand(context);
-		statefulCommand.run(context);
-	}
-
-	private Command createStatefulCommand(Context context)
-	{
-		Command command = InstanceUtils.createOrNull(this.command);
-		this.injectArguments(command, context);
-		return command;
-	}
-
-	// TODO cleanup
-	// TODO double lookups -- if a missing argument is found, first re-search used arguments for a match before failing
-	private void injectArguments(Command command, Context context)
-	{
-		CommandSender sender = context.getSender();
-		List<String> availableArguments = new ArrayList<>(context.getArguments());
-		// TODO caching
-		arguments: for (Field field : command.getClass().getDeclaredFields())
-		{
-			Argument argument = field.getAnnotation(Argument.class);
-			if (argument == null)
-			{
-				continue;
-			}
-
-			Permissions permissions = field.getAnnotation(Permissions.class);
-			if (permissions != null)
-			{
-				for (Permission permission : permissions.value())
-				{
-					String node = permission.value();
-					if (sender.hasPermission(node))
-					{
-						continue arguments;
-					}
-				}
-			}
-
-			Class<?> argumentType = field.getType();
-			Iterator<String> arguments = availableArguments.iterator();
-			while (arguments.hasNext())
-			{
-				String availableArgument = arguments.next();
-				Object resolved = Arguments.resolve(context, availableArgument, argumentType);
-				if (resolved == null)
-				{
-					if (argument.optional())
-					{
-						continue;
-					}
-
-					throw new ArgumentRequiredException(field.getName());
-				}
-				Try.to(() -> FieldUtils.writeField(field, command, resolved, true));
-				break;
-			}
-		}
 	}
 
 }
