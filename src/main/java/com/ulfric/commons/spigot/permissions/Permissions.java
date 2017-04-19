@@ -6,7 +6,7 @@ import com.ulfric.commons.service.Service;
 import com.ulfric.commons.spigot.service.ServiceUtils;
 import com.ulfric.commons.version.Version;
 
-@Name("Text")
+@Name("Permissions")
 @Version(1)
 public interface Permissions extends Service {
 

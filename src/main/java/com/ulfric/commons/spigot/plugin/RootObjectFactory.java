@@ -8,13 +8,15 @@ import com.ulfric.commons.service.Service;
 import com.ulfric.commons.spigot.command.Command;
 import com.ulfric.commons.spigot.command.CommandFeature;
 import com.ulfric.commons.spigot.container.ContainerLogger;
+import com.ulfric.commons.spigot.guard.Flag;
+import com.ulfric.commons.spigot.guard.FlagFeature;
 import com.ulfric.commons.spigot.listener.ListenerFeature;
 import com.ulfric.commons.spigot.service.ServiceFeature;
 import com.ulfric.commons.spigot.service.ServiceUtils;
 import com.ulfric.commons.spigot.text.placeholder.Placeholder;
 import com.ulfric.commons.spigot.text.placeholder.PlaceholderFeature;
 import com.ulfric.dragoon.ObjectFactory;
-import com.ulfric.dragoon.container.Container;
+import com.ulfric.dragoon.container.FeatureStateController;
 
 public class RootObjectFactory {
 
@@ -26,10 +28,11 @@ public class RootObjectFactory {
 	@SuppressWarnings("unchecked")
 	private static void setupFeatureWrappers()
 	{
-		Container.registerFeatureWrapper(Service.class, ServiceFeature::new);
-		Container.registerFeatureWrapper(Listener.class, ListenerFeature::new);
-		Container.registerFeatureWrapper(Command.class, CommandFeature::new);
-		Container.registerFeatureWrapper(Placeholder.class, PlaceholderFeature::new);
+		FeatureStateController.registerFeatureWrapper(Service.class, ServiceFeature::new);
+		FeatureStateController.registerFeatureWrapper(Listener.class, ListenerFeature::new);
+		FeatureStateController.registerFeatureWrapper(Command.class, CommandFeature::new);
+		FeatureStateController.registerFeatureWrapper(Placeholder.class, PlaceholderFeature::new);
+		FeatureStateController.registerFeatureWrapper(Flag.class, FlagFeature::new);
 	}
 
 	public static ObjectFactory getRootObjectFactory()
