@@ -1,4 +1,4 @@
-package com.ulfric.commons.spigot.spawn;
+package com.ulfric.commons.spigot.warp;
 
 import com.ulfric.commons.naming.Name;
 import com.ulfric.commons.service.Service;

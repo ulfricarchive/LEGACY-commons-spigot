@@ -64,9 +64,4 @@ public final class Warp extends Bean {
 		return this.location;
 	}
 	
-	public void setLocation(Location location)
-	{
-		this.location = location;
-	}
-	
 }
