@@ -37,6 +37,8 @@ public interface PersistentData extends Named, Persistent {
 
 	int getInt(String path);
 
+	int getInt(String path, int defaultValue);
+
 	Set<String> getKeys();
 
 }

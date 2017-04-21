@@ -6,6 +6,8 @@ public interface DataStore {
 
 	PersistentData getData(String pointer);
 
+	void deleteData(String pointer);
+
 	Stream<PersistentData> loadAllData();
 
 	DataStore getDataStore(String name);

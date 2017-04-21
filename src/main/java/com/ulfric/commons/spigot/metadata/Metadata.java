@@ -13,25 +13,35 @@ public enum Metadata {
 
 	;
 
-	private static final Map<Class<?>, Map<Object, Map<Object, Object>>> METADATA = new IdentityHashMap<>();
+	private static final Map<Class<?>, Map<Object, Map<String, Object>>> METADATA = new IdentityHashMap<>();
 
 	public static void write(Object holder, String key, Object value)
 	{
-		Map<Object, Object> data = Metadata.getOrCreateHolder(holder);
+		Map<String, Object> data = Metadata.getOrCreateHolder(holder);
 
 		data.put(key, value);
 	}
 
+	public static Object delete(Object holder, String key)
+	{
+		Map<String, Object> data = Metadata.getHolderOrNull(holder);
+		if (data == null)
+		{
+			return null;
+		}
+		return data.remove(key);
+	}
+
 	public static Object read(Entity holder, String key)
 	{
-		Map<Object, Object> data = Metadata.getOrCreateHolder(holder);
+		Map<String, Object> data = Metadata.getOrCreateHolder(holder);
 
 		return data.get(key);
 	}
 
 	public static Object read(CommandSender holder, String key)
 	{
-		Map<Object, Object> data = Metadata.getOrCreateHolder(holder);
+		Map<String, Object> data = Metadata.getOrCreateHolder(holder);
 
 		return data.get(key);
 	}
@@ -60,31 +70,44 @@ public enum Metadata {
 		return null;
 	}
 
-	private static Map<Object, Object> getOrCreateHolder(Object holder)
+	private static Map<String, Object> getOrCreateHolder(Object holder)
 	{
-		Map<Object, Map<Object, Object>> metadatables =
+		Map<Object, Map<String, Object>> metadatables =
 				Metadata.METADATA.computeIfAbsent(holder.getClass(), ignored -> new HashMap<>());
 
-		Object key;
+		Object key = Metadata.getKey(holder);
+		return metadatables.computeIfAbsent(key, ignored -> new HashMap<>());
+	}
 
+	private static Map<String, Object> getHolderOrNull(Object holder)
+	{
+		Map<Object, Map<String, Object>> metadatables = Metadata.METADATA.get(holder.getClass());
+		if (metadatables == null)
+		{
+			return null;
+		}
+		Object key = Metadata.getKey(holder);
+		return metadatables.get(key);
+	}
+
+	private static Object getKey(Object holder)
+	{
 		if (holder instanceof UUID)
 		{
-			key = holder;
+			return holder;
 		}
 		else if (holder instanceof Entity)
 		{
-			key = ((Entity) holder).getUniqueId();
+			return ((Entity) holder).getUniqueId();
 		}
 		else if (holder instanceof CommandSender)
 		{
-			key = ((CommandSender) holder).getName();
+			return ((CommandSender) holder).getName();
 		}
 		else
 		{
 			throw new IllegalArgumentException("Must be Entity / CommandSender");
 		}
-
-		return metadatables.computeIfAbsent(key, ignored -> new HashMap<>());
 	}
 
 }
