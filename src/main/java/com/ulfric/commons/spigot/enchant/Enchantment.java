@@ -6,11 +6,13 @@ import com.ulfric.commons.naming.Named;
 
 public interface Enchantment extends Named {
 
-	int getMaxLevel();
+	void register();
+
+	boolean isRegistered();
+
+	void registerIfNotRegistered();
 
 	String getFriendlyName();
-
-	boolean isApplicableTo(ItemStack item);
 
 	void applyTo(ItemStack item, int level);
 
