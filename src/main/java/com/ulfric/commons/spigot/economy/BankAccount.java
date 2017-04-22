@@ -4,12 +4,12 @@ import com.ulfric.commons.identity.Unique;
 
 public interface BankAccount extends Unique {
 
-	long getBalance();
+	long getBalance(Currency currency);
 
-	void setBalance(long balance);
+	void setBalance(CurrencyAmount amount);
 
-	BalanceDeductionResult deduct(long amount);
+	BalanceDeductionResult deduct(CurrencyAmount amount);
 
-	BalanceChangeResult deposit(long amount);
+	BalanceChangeResult deposit(CurrencyAmount amount);
 
 }
