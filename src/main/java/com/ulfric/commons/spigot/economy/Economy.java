@@ -1,5 +1,6 @@
 package com.ulfric.commons.spigot.economy;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.ulfric.commons.naming.Name;
@@ -18,10 +19,8 @@ public interface Economy extends Service {
 
 	Currency getCurrency(String name);
 
-	CurrencyAmount getCurrencyAmount(String text);
+	List<Currency> getCurrencies();
 
-	long getBalance(UUID uniqueId, Currency currency);
-
-	void setBalance(UUID uniqueId, CurrencyAmount amount);
+	BankAccount getAccount(UUID uniqueId);
 
 }
