@@ -19,4 +19,14 @@ public class BalanceChangeResult extends Bean {
 		return this.success;
 	}
 
+	public static final class LargerThanMaxLong extends BalanceChangeResult
+	{
+		public static final LargerThanMaxLong INSTANCE = new LargerThanMaxLong();
+
+		private LargerThanMaxLong()
+		{
+			super(false);
+		}
+	}
+
 }
