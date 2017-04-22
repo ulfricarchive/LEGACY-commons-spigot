@@ -1,11 +1,17 @@
 package com.ulfric.commons.spigot.enchant;
 
+import java.lang.reflect.Field;
+
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.bukkit.inventory.ItemStack;
 
 import com.ulfric.commons.exception.Try;
 
 public abstract class EnchantmentBase extends org.bukkit.enchantments.Enchantment implements Enchantment {
+
+	private static final Field ACCEPTING_NEW_FIELD =
+			FieldUtils.getDeclaredField(org.bukkit.enchantments.Enchantment.class, "acceptingNew");
+
 
 	private boolean registered = false;
 
@@ -21,6 +27,21 @@ public abstract class EnchantmentBase extends org.bukkit.enchantments.Enchantmen
 		return enchant.value().getId();
 	}
 
+	private static void unlockRegistrations()
+	{
+		EnchantmentBase.setRegistrations(true);
+	}
+
+	private static void lockRegistrations()
+	{
+		EnchantmentBase.setRegistrations(false);
+	}
+
+	private static void setRegistrations(boolean value)
+	{
+		Try.to(() -> EnchantmentBase.ACCEPTING_NEW_FIELD.set(null, value));
+	}
+
 	public EnchantmentBase()
 	{
 		super(-1);
@@ -31,7 +52,7 @@ public abstract class EnchantmentBase extends org.bukkit.enchantments.Enchantmen
 	private void setId(int id)
 	{
 		Try.to(() ->
-				FieldUtils.getDeclaredField(this.getClass(), "id").set(this, id));
+				FieldUtils.getDeclaredField(this.getClass(), "id", true).set(this, id));
 	}
 
 	@Override
@@ -42,7 +63,11 @@ public abstract class EnchantmentBase extends org.bukkit.enchantments.Enchantmen
 			throw new IllegalStateException("Enchantment already registered.");
 		}
 
+		EnchantmentBase.unlockRegistrations();
+
 		org.bukkit.enchantments.Enchantment.registerEnchantment(this);
+
+		EnchantmentBase.lockRegistrations();
 
 		this.registered = true;
 	}
