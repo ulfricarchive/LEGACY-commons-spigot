@@ -10,7 +10,7 @@ import com.ulfric.commons.exception.Try;
 public abstract class EnchantmentBase extends org.bukkit.enchantments.Enchantment implements Enchantment {
 
 	private static final Field ACCEPTING_NEW_FIELD =
-			FieldUtils.getDeclaredField(org.bukkit.enchantments.Enchantment.class, "acceptingNew");
+			FieldUtils.getDeclaredField(org.bukkit.enchantments.Enchantment.class, "acceptingNew", true);
 
 	private boolean registered = false;
 
