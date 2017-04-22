@@ -12,7 +12,6 @@ public abstract class EnchantmentBase extends org.bukkit.enchantments.Enchantmen
 	private static final Field ACCEPTING_NEW_FIELD =
 			FieldUtils.getDeclaredField(org.bukkit.enchantments.Enchantment.class, "acceptingNew");
 
-
 	private boolean registered = false;
 
 	private static int getEnchantmentId(EnchantmentBase base)
