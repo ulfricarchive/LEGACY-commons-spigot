@@ -4,9 +4,12 @@ import com.ulfric.commons.bean.Bean;
 
 public class BalanceChangeResult extends Bean {
 
+	public static final BalanceChangeResult SUCCESS = new BalanceChangeResult(true);
+	public static final BalanceChangeResult FAILURE = new BalanceChangeResult(false);
+
 	private final boolean success;
 
-	public BalanceChangeResult(boolean success)
+	protected BalanceChangeResult(boolean success)
 	{
 		this.success = success;
 	}

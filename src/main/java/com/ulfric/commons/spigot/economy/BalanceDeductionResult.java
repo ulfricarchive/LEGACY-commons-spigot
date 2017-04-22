@@ -2,9 +2,11 @@ package com.ulfric.commons.spigot.economy;
 
 public class BalanceDeductionResult extends BalanceChangeResult {
 
+	public static final BalanceDeductionResult SUCCESS = new BalanceDeductionResult();
+
 	private final long amountMissing;
 
-	public BalanceDeductionResult()
+	private BalanceDeductionResult()
 	{
 		this(true, 0);
 	}
