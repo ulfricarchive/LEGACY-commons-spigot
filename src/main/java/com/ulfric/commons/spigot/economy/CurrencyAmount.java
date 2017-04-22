@@ -52,7 +52,7 @@ public final class CurrencyAmount extends Bean {
 	public static CurrencyAmount valueOf(Currency currency, long amount)
 	{
 		Objects.requireNonNull(currency, "currency");
-		if (amount <= 0)
+		if (amount < 0)
 		{
 			throw new IllegalArgumentException("Non-positive amount: " + amount);
 		}

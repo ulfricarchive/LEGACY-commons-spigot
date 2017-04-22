@@ -28,6 +28,7 @@ public enum Arguments {
 		Arguments.registerResolver(new NameToPlayerArgumentResolver());
 		Arguments.registerResolver(new NameToOfflinePlayerArgumentResolver());
 		Arguments.registerResolver(new PermissionEntityArgumentResolver());
+		Arguments.registerResolver(new CurrencyAmountArgumentResolver());
 	}
 
 	public static void registerResolver(ArgumentResolver<?> argumentResolver)
