@@ -5,6 +5,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.ulfric.commons.func.TriFunction;
 import com.ulfric.commons.spigot.plugin.PluginUtils;
 
 public enum Tasks {
@@ -16,22 +17,32 @@ public enum Tasks {
 		return seconds * 20;
 	}
 
-	public static Task run(Runnable runnable)
+	public static Task runSync(Runnable runnable)
 	{
-		BukkitTask task = Tasks.getScheduler().runTask(Tasks.getPlugin(runnable), runnable);
-		return new Task(task.getTaskId());
+		return Tasks.runLater(runnable, 0L);
 	}
 
 	public static Task runAsync(Runnable runnable)
 	{
-		BukkitTask task = Tasks.getScheduler().runTaskAsynchronously(Tasks.getPlugin(runnable), runnable);
-		return new Task(task.getTaskId());
+		return Tasks.scheduleTask(runnable, 0L, Tasks.getScheduler()::runTaskLaterAsynchronously);
 	}
 
 	public static Task runLater(Runnable runnable, long ticks)
 	{
-		BukkitTask task = Tasks.getScheduler().runTaskLater(Tasks.getPlugin(runnable), runnable, ticks);
-		return new Task(task.getTaskId());
+		return Tasks.scheduleTask(runnable, ticks, Tasks.getScheduler()::runTaskLater);
+	}
+
+	private static Task scheduleTask(Runnable runnable, long ticks,
+	                                       TriFunction<Plugin, Runnable, Long, BukkitTask> schedulerMethod)
+	{
+		Task task = new Task();
+		TaskRunnable taskRunnable = new TaskRunnable(task, runnable);
+
+		BukkitTask bukkitTask = schedulerMethod.apply(Tasks.getPlugin(runnable), taskRunnable, ticks);
+
+		task.setTask(bukkitTask.getTaskId());
+
+		return task;
 	}
 
 	private static BukkitScheduler getScheduler()
