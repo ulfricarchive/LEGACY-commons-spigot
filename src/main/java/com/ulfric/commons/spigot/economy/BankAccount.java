@@ -8,4 +8,8 @@ public interface BankAccount extends Unique {
 
 	void setBalance(long balance);
 
+	BalanceDeductionResult deduct(long amount);
+
+	BalanceChangeResult deposit(long amount);
+
 }
