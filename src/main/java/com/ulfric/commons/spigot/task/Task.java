@@ -4,12 +4,9 @@ import org.bukkit.Bukkit;
 
 public final class Task {
 
-	private final int task;
-
-	Task(int task)
-	{
-		this.task = task;
-	}
+	private int task = -1;
+	private boolean queued = false;
+	private boolean finished = false;
 
 	public void cancel()
 	{
@@ -18,12 +15,27 @@ public final class Task {
 
 	public boolean isComplete()
 	{
-		return !Bukkit.getScheduler().isCurrentlyRunning(this.task) && !this.isQueued();
+		return this.finished;
 	}
 
 	public boolean isQueued()
 	{
-		return Bukkit.getScheduler().isQueued(this.task);
+		return this.queued && !this.finished;
+	}
+
+	void setTask(int task)
+	{
+		this.task = task;
+	}
+
+	void taskQueued()
+	{
+		this.queued = true;
+	}
+
+	void taskFinished()
+	{
+		this.finished = true;
 	}
 
 }
