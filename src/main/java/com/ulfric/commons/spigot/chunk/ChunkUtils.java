@@ -6,8 +6,7 @@ import net.minecraft.server.v1_11_R1.ChunkSection;
 import net.minecraft.server.v1_11_R1.IBlockData;
 import org.bukkit.Material;
 
-public enum ChunkUtils
-{
+public enum ChunkUtils {
 
 	;
 
