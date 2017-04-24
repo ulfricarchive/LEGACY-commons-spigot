@@ -1,6 +1,7 @@
 package com.ulfric.commons.spigot.text;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.ulfric.commons.naming.Name;
 import com.ulfric.commons.service.Service;
@@ -19,10 +20,23 @@ public interface Text extends Service {
 
 	default void sendMessage(CommandSender target, String code)
 	{
-		target.sendMessage(this.getMessage(target, code));
+		if (target instanceof Player)
+		{
+			this.sendMessage((Player) target, code);
+			return;
+		}
+
+		target.sendMessage(this.getLegacyMessage(target, code));
 	}
 
-	String getMessage(CommandSender target, String code);
+	default void sendMessage(Player target, String code)
+	{
+		target.sendRawMessage(this.getRawMessage(target, code));
+	}
+
+	String getRawMessage(CommandSender target, String code);
+
+	String getLegacyMessage(CommandSender target, String code);
 
 	void registerPlaceholder(Placeholder placeholder);
 
