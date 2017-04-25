@@ -21,6 +21,8 @@ import com.ulfric.dragoon.construct.InstanceUtils;
 import com.ulfric.dragoon.container.ChildFeature;
 import com.ulfric.dragoon.container.Feature;
 
+import javassist.Modifier;
+
 public final class CommandFeature extends ChildFeature {
 
 	private static final Map<String, PluginCommand> BUKKIT_COMMANDS = CommandFeature.commandMap();
@@ -94,7 +96,7 @@ public final class CommandFeature extends ChildFeature {
 
 	private CommandInvoker getParentCommand()
 	{
-		Class<?> superCommand = this.command.getSuperclass();
+		Class<?> superCommand = this.getSuperCommand(this.command);
 
 		if (!Command.class.isAssignableFrom(superCommand))
 		{
@@ -116,6 +118,23 @@ public final class CommandFeature extends ChildFeature {
 		}
 
 		return (CommandInvoker) parentExecutor;
+	}
+
+	private Class<?> getSuperCommand(Class<?> type)
+	{
+		Class<?> superCommand = type.getSuperclass();
+
+		if (!Command.class.isAssignableFrom(superCommand))
+		{
+			return null;
+		}
+
+		if (Modifier.isAbstract(superCommand.getModifiers()))
+		{
+			return this.getSuperCommand(superCommand);
+		}
+
+		return superCommand;
 	}
 
 	private CommandInvoker schema()

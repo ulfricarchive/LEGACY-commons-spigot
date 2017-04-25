@@ -22,6 +22,16 @@ public enum Metadata {
 		data.put(key, value);
 	}
 
+	public static void delete(Object holder)
+	{
+		Map<Object, Map<String, Object>> metadata = Metadata.METADATA.get(holder.getClass());
+		if (metadata == null)
+		{
+			return;
+		}
+		metadata.remove(Metadata.getKey(holder));
+	}
+
 	public static Object delete(Object holder, String key)
 	{
 		Map<String, Object> data = Metadata.getHolderOrNull(holder);

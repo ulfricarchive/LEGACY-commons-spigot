@@ -11,6 +11,11 @@ public class MetadataDefaults {
 	public static final String LAST_UNIQUEIDOF_VIEW_ID = "LastUniqueIdOfViewId";
 	public static final String LAST_UNIQUEIDOF_VIEW_NAME = "LastUniqueIdOfViewName";
 	public static final String NO_PERMISSION = "NoPermission";
+	public static final String PUNISHMENT_ID = "PunishmentId";
+	public static final String PUNISHMENT_PUNISHER = "PunishmentPunisher";
+	public static final String PUNISHMENT_REASON = "PunishmentReason";
+	public static final String PUNISHMENT_BEGINNING = "PunishmentBeginning";
+	public static final String PUNISHMENT_EXPIRY = "PunishmentExpiry";
 
 	private MetadataDefaults()
 	{
