@@ -23,14 +23,19 @@ public class NameToOfflinePlayerArgumentResolver implements ArgumentResolver<Off
 		else
 		{
 			player = Bukkit.getOfflinePlayer(argument);
+
+			if (player == null)
+			{
+				return null;
+			}
 		}
 
-		if (player == null || !(player.hasPlayedBefore() || player.isOnline()))
+		if (player.hasPlayedBefore() || player.isOnline())
 		{
-			return null;
+			return player;
 		}
 
-		return player;
+		return null;
 	}
 
 }

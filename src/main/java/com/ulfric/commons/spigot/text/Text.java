@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 
 import com.ulfric.commons.naming.Name;
 import com.ulfric.commons.service.Service;
-import com.ulfric.commons.spigot.metadata.Metadata;
 import com.ulfric.commons.spigot.service.ServiceUtils;
 import com.ulfric.commons.spigot.text.placeholder.Placeholder;
 import com.ulfric.commons.version.Version;
@@ -21,18 +20,13 @@ public interface Text extends Service {
 
 	default void sendMessage(CommandSender target, String code, String... metadata)
 	{
-		int length = (metadata.length / 2) * 2;
-		for (int x = 0; x < length; x += 2)
+		if (target instanceof Player)
 		{
-			Metadata.write(target, metadata[x], metadata[x+1]);
+			this.sendMessage((Player) target, code, metadata);
+			return;
 		}
 
-		this.sendMessage(target, code);
-
-		for (int x = 0; x < length; x += 2)
-		{
-			Metadata.delete(target, metadata[x]);
-		}
+		target.sendMessage(this.getLegacyMessage(target, code, metadata));
 	}
 
 	default void sendMessage(CommandSender target, String code)
@@ -48,18 +42,7 @@ public interface Text extends Service {
 
 	default void sendMessage(Player target, String code, String... metadata)
 	{
-		int length = (metadata.length / 2) * 2;
-		for (int x = 0; x < length; x += 2)
-		{
-			Metadata.write(target, metadata[x], metadata[x+1]);
-		}
-
-		this.sendMessage(target, code);
-
-		for (int x = 0; x < length; x += 2)
-		{
-			Metadata.delete(target, metadata[x]);
-		}
+		target.sendRawMessage(this.getRawMessage(target, code, metadata));
 	}
 
 	default void sendMessage(Player target, String code)
@@ -67,9 +50,21 @@ public interface Text extends Service {
 		target.sendRawMessage(this.getRawMessage(target, code));
 	}
 
+	String getRawMessage(CommandSender target, String code, String... metadata);
+
+	String getLegacyMessage(CommandSender target, String code, String... metadata);
+
 	String getRawMessage(CommandSender target, String code);
 
 	String getLegacyMessage(CommandSender target, String code);
+
+	String getRawMessage(String code, String... metadata);
+
+	String getLegacyMessage(String code, String... metadata);
+
+	String getRawMessage(String code);
+
+	String getLegacyMessage(String code);
 
 	void registerPlaceholder(Placeholder placeholder);
 

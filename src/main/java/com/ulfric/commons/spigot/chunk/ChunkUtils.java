@@ -14,6 +14,7 @@ public enum ChunkUtils {
 
 	public static IBlockData nmsBlock(Material material, byte data)
 	{
+		@SuppressWarnings("deprecation")
 		int id = material.getId();
 		int combined = id + (data << 12);
 
