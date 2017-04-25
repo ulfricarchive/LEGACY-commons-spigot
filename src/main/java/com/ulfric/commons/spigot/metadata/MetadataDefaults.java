@@ -8,7 +8,7 @@ public class MetadataDefaults {
 	public static final String LAST_PERMISSION_TOUCH_PARENT = "LastPermissionTouchParent";
 	public static final String LAST_BALANCE_VIEW = "LastBalanceView";
 	public static final String LAST_BALANCE_VIEW_USER = "LastBalanceViewUser";
-	public static final String LAST_UUIDOF_VIEW = "LastUUIDOfView";
+	public static final String LAST_UNIQUEIDOF_VIEW = "LastUniqueIdOfView";
 	public static final String NO_PERMISSION = "NoPermission";
 
 	private MetadataDefaults()
