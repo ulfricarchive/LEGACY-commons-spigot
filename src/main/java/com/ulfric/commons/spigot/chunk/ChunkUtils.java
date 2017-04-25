@@ -1,10 +1,12 @@
 package com.ulfric.commons.spigot.chunk;
 
+import org.bukkit.Material;
+
+import net.minecraft.server.v1_11_R1.Block;
 import net.minecraft.server.v1_11_R1.BlockPosition;
 import net.minecraft.server.v1_11_R1.Chunk;
 import net.minecraft.server.v1_11_R1.ChunkSection;
 import net.minecraft.server.v1_11_R1.IBlockData;
-import org.bukkit.Material;
 
 public enum ChunkUtils {
 
@@ -14,7 +16,8 @@ public enum ChunkUtils {
 	{
 		int id = material.getId();
 		int combined = id + (data << 12);
-		return net.minecraft.server.v1_11_R1.Block.getByCombinedId(combined);
+
+		return Block.getByCombinedId(combined);
 	}
 
 	public static void setBlockInChunk(Chunk chunk, int x, int y, int z, IBlockData iBlockData)
