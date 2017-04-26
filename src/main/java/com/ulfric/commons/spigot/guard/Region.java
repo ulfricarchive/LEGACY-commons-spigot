@@ -1,7 +1,7 @@
 package com.ulfric.commons.spigot.guard;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -33,7 +33,7 @@ public final class Region extends Bean implements Named, Weighted<Region> {
 		{
 			Objects.requireNonNull(this.name, "name");
 			Objects.requireNonNull(this.world, "world");
-			Map<Flag<?>, Object> flags = this.flags == null ? Collections.emptyMap() : new HashMap<>(this.flags);
+			Map<Flag<?>, Object> flags = this.flags == null ? Collections.emptyMap() : new IdentityHashMap<>(this.flags);
 			return new Region(this.name, this.world, this.bounds, this.weight, flags, this.global);
 		}
 
