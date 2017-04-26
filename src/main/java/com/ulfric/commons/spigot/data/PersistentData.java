@@ -28,7 +28,7 @@ public interface PersistentData extends Named, Persistent {
 
 	default UUID getUniqueId(String path)
 	{
-		return UniqueIdUtils.parseUniqueId(path);
+		return UniqueIdUtils.parseUniqueId(this.getString(path));
 	}
 
 	String getString(String path);
