@@ -97,7 +97,7 @@ public final class CommandFeature extends ChildFeature {
 	{
 		Class<?> superCommand = this.getSuperCommand(this.command);
 
-		if (!Command.class.isAssignableFrom(superCommand))
+		if (superCommand == null)
 		{
 			return null;
 		}
