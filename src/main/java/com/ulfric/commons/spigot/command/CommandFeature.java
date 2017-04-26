@@ -1,6 +1,7 @@
 package com.ulfric.commons.spigot.command;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -20,8 +21,6 @@ import com.ulfric.commons.spigot.plugin.PluginUtils;
 import com.ulfric.dragoon.construct.InstanceUtils;
 import com.ulfric.dragoon.container.ChildFeature;
 import com.ulfric.dragoon.container.Feature;
-
-import javassist.Modifier;
 
 public final class CommandFeature extends ChildFeature {
 
