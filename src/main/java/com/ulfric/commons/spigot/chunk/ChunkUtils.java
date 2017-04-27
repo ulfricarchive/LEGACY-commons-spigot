@@ -1,12 +1,13 @@
 package com.ulfric.commons.spigot.chunk;
 
-import org.bukkit.Material;
-
+import com.ulfric.commons.spigot.plugin.PluginUtils;
 import net.minecraft.server.v1_11_R1.Block;
 import net.minecraft.server.v1_11_R1.BlockPosition;
 import net.minecraft.server.v1_11_R1.Chunk;
 import net.minecraft.server.v1_11_R1.ChunkSection;
 import net.minecraft.server.v1_11_R1.IBlockData;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 
 public enum ChunkUtils {
 
@@ -29,7 +30,18 @@ public enum ChunkUtils {
 	public static void applyChanges(Chunk chunk, ChunkSection[] sections)
 	{
 		System.arraycopy(sections, 0, chunk.getSections(), 0, sections.length);
+		chunk.initLighting();
 		chunk.world.getWorld().refreshChunk(chunk.bukkitChunk.getX(), chunk.bukkitChunk.getZ());
+	}
+
+	public static void applyChangesAsync(Chunk chunk, ChunkSection[] sections)
+	{
+		System.arraycopy(sections, 0, chunk.getSections(), 0, sections.length);
+		chunk.initLighting();
+		Bukkit.getScheduler().runTask(PluginUtils.getMainPlugin(), () ->
+		{
+			chunk.world.getWorld().refreshChunk(chunk.bukkitChunk.getX(), chunk.bukkitChunk.getZ());
+		});
 	}
 
 }
