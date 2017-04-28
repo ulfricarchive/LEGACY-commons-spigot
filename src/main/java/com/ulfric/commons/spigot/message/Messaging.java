@@ -4,6 +4,7 @@ import com.ulfric.commons.naming.Name;
 import com.ulfric.commons.service.Service;
 import com.ulfric.commons.spigot.service.ServiceUtils;
 import com.ulfric.commons.version.Version;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -16,7 +17,9 @@ public interface Messaging extends Service {
 		return ServiceUtils.getService(Messaging.class);
 	}
 	
-	void setLastRecipients(UUID uniqueId, UUID recipient);
+	void send(Player sender, Player receiver, String content);
+	
+	void reply(Player sender, Player receiver, String content);
 	
 	UUID getLastRecipient(UUID uniqueId);
 	
