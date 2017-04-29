@@ -11,7 +11,13 @@ public class MetadataDefaults {
 	public static final String LAST_UNIQUEIDOF_VIEW_ID = "LastUniqueIdOfViewId";
 	public static final String LAST_UNIQUEIDOF_VIEW_NAME = "LastUniqueIdOfViewName";
 	public static final String LAST_COOLDOWN_VIEW = "LastCooldownView";
-	public static final String lAST_COOLDOWN_VIEW_NAME = "LastCooldownViewName";
+	public static final String LAST_COOLDOWN_VIEW_NAME = "LastCooldownViewName";
+	public static final String LAST_MESSAGE_CONTENT = "LastMessageContent";
+	public static final String LAST_MESSAGE_SENDER = "LastMessageSender";
+	public static final String LAST_MESSAGE_RECEIVER = "LastMessageReceiver";
+	public static final String LAST_MESSAGE_REPLY_CONTENT = "LastMessageReplyContent";
+	public static final String LAST_MESSAGE_REPLY_SENDER = "LastMessageReplySender";
+	public static final String LAST_MESSAGE_REPLY_RECEIVER = "LastMessageReplyReceiver";
 	public static final String NO_PERMISSION = "NoPermission";
 	public static final String PUNISHMENT_ID = "PunishmentId";
 	public static final String PUNISHMENT_PUNISHER = "PunishmentPunisher";
