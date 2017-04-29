@@ -1,16 +1,14 @@
 package com.ulfric.commons.spigot.economy;
 
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class BalanceUpdateEvent extends Event implements Cancellable {
+public class BalanceUpdateEvent extends Event {
 
 	private static final HandlerList HANDLERS = new HandlerList();
 
 	private final BankAccount account;
 	private final CurrencyAmount newBalance;
-	private boolean cancel;
 
 	public BalanceUpdateEvent(BankAccount account, CurrencyAmount newBalance)
 	{
@@ -32,18 +30,6 @@ public class BalanceUpdateEvent extends Event implements Cancellable {
 	public CurrencyAmount getNewBalance()
 	{
 		return this.newBalance;
-	}
-
-	@Override
-	public boolean isCancelled()
-	{
-		return this.cancel;
-	}
-
-	@Override
-	public void setCancelled(boolean cancel)
-	{
-		this.cancel = cancel;
 	}
 
 }
