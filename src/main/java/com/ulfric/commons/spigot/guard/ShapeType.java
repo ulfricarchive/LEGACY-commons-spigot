@@ -5,6 +5,7 @@ import com.ulfric.commons.naming.Named;
 public enum ShapeType {
 
 	OMNIPRESENT(Omnipresent.class),
+	INCLUSIVECUBOID(InclusiveCuboid.class),
 	CUBOID(Cuboid.class);
 
 	public static ShapeType getShapeType(String name)
