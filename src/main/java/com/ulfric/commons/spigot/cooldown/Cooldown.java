@@ -1,10 +1,8 @@
 package com.ulfric.commons.spigot.cooldown;
 
 import com.ulfric.commons.bean.Bean;
-import com.ulfric.commons.naming.Named;
 
 import java.time.Instant;
-import java.time.temporal.ChronoField;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -21,21 +19,21 @@ public final class Cooldown extends Bean {
 		private UUID uniqueId;
 		private Instant start;
 		private Instant expiry;
-		private Class<? extends Named> owner;
+		private String name;
 		
 		@Override
 		public Cooldown build()
 		{
 			Objects.requireNonNull(this.uniqueId);
-			Objects.requireNonNull(this.owner);
+			Objects.requireNonNull(this.name);
 			Objects.requireNonNull(this.expiry);
 			
 			if (this.start == null)
 			{
-				return new Cooldown(this.uniqueId, this.owner, this.expiry);
+				return new Cooldown(this.uniqueId, this.name, this.expiry);
 			}
 			
-			return new Cooldown(this.uniqueId, this.owner, this.start, this.expiry);
+			return new Cooldown(this.uniqueId, this.name, this.start, this.expiry);
 		}
 		
 		public Builder setUniqueId(UUID uniqueId)
@@ -44,9 +42,9 @@ public final class Cooldown extends Bean {
 			return this;
 		}
 		
-		public Builder setOwner(Class<? extends Named> owner)
+		public Builder setName(String name)
 		{
-			this.owner = owner;
+			this.name = name;
 			return this;
 		}
 		
@@ -67,19 +65,19 @@ public final class Cooldown extends Bean {
 	private final UUID uniqueId;
 	private final Instant start;
 	private final Instant expiry;
-	private final Class<? extends Named> owner;
+	private final String name;
 	
-	Cooldown(UUID uniqueId, Class<? extends Named> owner, Instant start, Instant expiry)
+	Cooldown(UUID uniqueId, String name, Instant start, Instant expiry)
 	{
 		this.uniqueId = uniqueId;
-		this.owner = owner;
+		this.name = name;
 		this.start = start;
 		this.expiry = expiry;
 	}
 	
-	Cooldown(UUID uniqueId, Class<? extends Named> owner, Instant expiry)
+	Cooldown(UUID uniqueId, String name, Instant expiry)
 	{
-		this(uniqueId, owner, Instant.now(), expiry);
+		this(uniqueId, name, Instant.now(), expiry);
 	}
 	
 	public UUID getUniqueId()
@@ -87,9 +85,9 @@ public final class Cooldown extends Bean {
 		return this.uniqueId;
 	}
 	
-	public Class<? extends Named> getOwner()
+	public String getName()
 	{
-		return this.owner;
+		return this.name;
 	}
 	
 	public Instant getStart()
@@ -104,7 +102,7 @@ public final class Cooldown extends Bean {
 	
 	public Instant getRemaining()
 	{
-		return Instant.now().minusMillis(this.getExpiry().getLong(ChronoField.MILLI_OF_SECOND));
+		return Instant.now().minusMillis(this.getExpiry().toEpochMilli());
 	}
 	
 	public boolean isExpired()
