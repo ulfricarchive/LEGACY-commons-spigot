@@ -10,11 +10,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -26,6 +28,7 @@ import com.ulfric.commons.spigot.command.argument.ArgumentRequiredException;
 import com.ulfric.commons.spigot.command.argument.Arguments;
 import com.ulfric.commons.spigot.metadata.Metadata;
 import com.ulfric.commons.spigot.metadata.MetadataDefaults;
+import com.ulfric.commons.spigot.text.Text;
 import com.ulfric.dragoon.construct.InstanceUtils;
 
 final class CommandInvoker implements CommandExecutor {
@@ -58,15 +61,20 @@ final class CommandInvoker implements CommandExecutor {
 
 	private List<RuleEnforcement> rules()
 	{
-		List<Annotation> annotations = AnnotationUtils.getLeafAnnotations(this.command.getClass(), Rule.class);
+		List<Annotation> annotations = AnnotationUtils.getLeafAnnotations(this.command, Rule.class);
+		annotations.addAll(AnnotationUtils.getLeafAnnotations(this.command, Rules.class));
+
 		if (annotations.isEmpty())
 		{
 			return Collections.emptyList();
 		}
 
 		return annotations.stream()
-				.map(annotation -> annotation.annotationType().getAnnotation(Rules.class))
-				.map(Rules::value)
+				.map(annotation -> ArrayUtils.addAll(
+						annotation.annotationType().getAnnotationsByType(Rule.class),
+						Optional.ofNullable(annotation.annotationType().getAnnotation(Rules.class))
+								.map(Rules::value).orElse(new Rule[0])
+				))
 				.flatMap(Stream::of)
 				.map(Rule::value)
 				.distinct()
@@ -131,6 +139,11 @@ final class CommandInvoker implements CommandExecutor {
 		{
 			Context context = this.createContext(sender, command, label, arguments);
 			this.handleCommand(context, new ArrayList<>(context.getArguments()));
+		}
+		catch (RuleNotPassedException exception)
+		{
+			Metadata.write(sender, "rule-failed", exception.getDetail());
+			Text.getService().sendMessage(sender, exception.getMessage());
 		}
 		catch (Exception ignore)
 		{
