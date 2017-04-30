@@ -9,6 +9,7 @@ import java.util.UUID;
 import com.ulfric.commons.bean.Bean;
 import com.ulfric.commons.bean.Weighted;
 import com.ulfric.commons.naming.Named;
+import com.ulfric.commons.spigot.shape.Shape;
 
 public final class Region extends Bean implements Named, Weighted<Region> {
 

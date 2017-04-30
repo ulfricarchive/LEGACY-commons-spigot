@@ -1,5 +1,7 @@
-package com.ulfric.commons.spigot.guard;
+package com.ulfric.commons.spigot.shape;
 
+import com.ulfric.commons.bean.Bean;
+import com.ulfric.commons.naming.Name;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,11 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ulfric.commons.bean.Bean;
-import com.ulfric.commons.naming.Name;
-
-@Name("Cuboid")
-public final class Cuboid extends Bean implements Shape {
+@Name("InclusiveCuboid")
+public final class InclusiveCuboid extends Bean implements Shape {
 
 	private final Point min;
 	private final Point max;
@@ -24,12 +23,12 @@ public final class Cuboid extends Bean implements Shape {
 	private final int maxZ;
 	private final List<Point> verticies;
 
-	public Cuboid()
+	public InclusiveCuboid()
 	{
 		this(Point.ZERO, Point.ZERO);
 	}
 
-	public Cuboid(Point min, Point max)
+	public InclusiveCuboid(Point min, Point max)
 	{
 		Objects.requireNonNull(min, "min");
 		Objects.requireNonNull(max, "max");
@@ -48,9 +47,9 @@ public final class Cuboid extends Bean implements Shape {
 	@Override
 	public boolean containsPoint(int x, int y, int z)
 	{
-		return (x >= this.minX && x <= this.maxX
-				&& y >= this.minY && y <= this.maxY
-				&& z >= this.minZ && z <= this.maxZ);
+		return (x > this.minX && x < this.maxX
+				&& y > this.minY && y < this.maxY
+				&& z > this.minZ && z < this.maxZ);
 	}
 
 	@Override
@@ -97,7 +96,7 @@ public final class Cuboid extends Bean implements Shape {
 				.setY((int) map.get("max-y"))
 				.setZ((int) map.get("max-z")).build();
 
-		return new Cuboid(minPoint, maxPoint);
+		return new InclusiveCuboid(minPoint, maxPoint);
 	}
 
 }

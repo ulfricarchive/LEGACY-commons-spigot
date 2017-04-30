@@ -1,4 +1,4 @@
-package com.ulfric.commons.spigot.guard;
+package com.ulfric.commons.spigot.shape;
 
 import com.ulfric.commons.naming.Named;
 
