@@ -7,6 +7,8 @@ import org.bukkit.event.Listener;
 import com.ulfric.commons.service.Service;
 import com.ulfric.commons.spigot.command.Command;
 import com.ulfric.commons.spigot.command.CommandFeature;
+import com.ulfric.commons.spigot.command.argument.ArgumentResolver;
+import com.ulfric.commons.spigot.command.argument.ArgumentResolverFeature;
 import com.ulfric.commons.spigot.container.ContainerLogger;
 import com.ulfric.commons.spigot.guard.Flag;
 import com.ulfric.commons.spigot.guard.FlagFeature;
@@ -32,6 +34,7 @@ public class RootObjectFactory {
 		FeatureStateController.registerFeatureWrapper(Listener.class, ListenerFeature::new);
 		FeatureStateController.registerFeatureWrapper(Command.class, CommandFeature::new);
 		FeatureStateController.registerFeatureWrapper(Placeholder.class, PlaceholderFeature::new);
+		FeatureStateController.registerFeatureWrapper(ArgumentResolver.class, ArgumentResolverFeature::new);
 		FeatureStateController.registerFeatureWrapper(Flag.class, FlagFeature::new);
 	}
 
