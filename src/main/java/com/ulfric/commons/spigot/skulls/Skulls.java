@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -42,8 +43,11 @@ public enum Skulls {
 	private static final Method MAP_PUT =
 			Try.to(() -> ForwardingMultimap.class.getDeclaredMethod("put", Object.class, Object.class));
 
+	private static final Class<?> SKULL_META_CLASS =
+			Try.to(() -> ClassUtils.getClass("org.bukkit.craftbukkit.v1_11_R1.inventory.CraftMetaSkull", true));
+
 	private static final Field PROFILE_FIELD =
-			Try.to(() -> ItemMeta.class.getDeclaredField("profile"));
+			Try.to(() -> FieldUtils.getDeclaredField(Skulls.SKULL_META_CLASS, "profile", true));
 
 	private static final Map<String, ItemStack> SKULL_CACHE = new ConcurrentHashMap<>();
 

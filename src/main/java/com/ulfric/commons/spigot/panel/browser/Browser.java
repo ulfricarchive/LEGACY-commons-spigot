@@ -18,6 +18,11 @@ public interface Browser {
 
 	default Panel currentTab()
 	{
+		if (this.tabs().size() == 0)
+		{
+			return null;
+		}
+
 		return this.tabs().get(this.currentIndex());
 	}
 
