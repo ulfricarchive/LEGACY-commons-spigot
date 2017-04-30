@@ -20,6 +20,8 @@ public enum Skulls {
 
 	;
 
+	public static final String TEXTURE_URL = "http://textures.minecraft.net/texture/";
+
 	private static final Base64.Encoder ENCODER = Base64.getEncoder();
 
 	private static final Class<?> GAME_PROFILE =
@@ -45,7 +47,12 @@ public enum Skulls {
 
 	private static final Map<String, ItemStack> SKULL_CACHE = new ConcurrentHashMap<>();
 
-	public static ItemStack of(String url)
+	public static ItemStack ofTexture(String texture)
+	{
+		return Skulls.ofURL(Skulls.TEXTURE_URL + texture);
+	}
+
+	public static ItemStack ofURL(String url)
 	{
 		return Skulls.SKULL_CACHE.computeIfAbsent(url.toLowerCase(), lowerUrl ->
 		{
