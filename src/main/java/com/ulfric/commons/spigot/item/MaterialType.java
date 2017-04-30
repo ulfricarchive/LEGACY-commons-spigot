@@ -8,24 +8,24 @@ import org.bukkit.Material;
 
 import com.ulfric.commons.bean.Bean;
 
-import gnu.trove.map.TByteObjectMap;
-import gnu.trove.map.hash.TByteObjectHashMap;
+import gnu.trove.map.TShortObjectMap;
+import gnu.trove.map.hash.TShortObjectHashMap;
 
 public final class MaterialType extends Bean {
 
-	private static final Map<Material, TByteObjectMap<MaterialType>> CACHE = new EnumMap<>(Material.class);
+	private static final Map<Material, TShortObjectMap<MaterialType>> CACHE = new EnumMap<>(Material.class);
 
 	public static MaterialType getType(Material material)
 	{
-		return MaterialType.getType(material, (byte) 0);
+		return MaterialType.getType(material, (short) 0);
 	}
 
-	public static MaterialType getType(Material material, byte data)
+	public static MaterialType getType(Material material, short data)
 	{
 		Objects.requireNonNull(material);
 
-		TByteObjectMap<MaterialType> dataToType = 
-				MaterialType.CACHE.computeIfAbsent(material, ignore -> new TByteObjectHashMap<>());
+		TShortObjectMap<MaterialType> dataToType = 
+				MaterialType.CACHE.computeIfAbsent(material, ignore -> new TShortObjectHashMap<>());
 
 		MaterialType type = dataToType.get(data);
 		if (type == null)
@@ -37,9 +37,9 @@ public final class MaterialType extends Bean {
 	}
 
 	private final Material type;
-	private final byte data;
+	private final short data;
 
-	private MaterialType(Material type, byte data)
+	private MaterialType(Material type, short data)
 	{
 		this.type = type;
 		this.data = data;
@@ -50,7 +50,7 @@ public final class MaterialType extends Bean {
 		return this.type;
 	}
 
-	public byte getData()
+	public short getData()
 	{
 		return this.data;
 	}
