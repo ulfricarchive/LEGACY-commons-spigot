@@ -1,18 +1,14 @@
 package com.ulfric.commons.spigot.panel;
 
-import java.util.List;
-
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
+import com.ulfric.commons.spigot.panel.browser.Browser;
+import com.ulfric.commons.spigot.panel.click.ButtonBuilder;
 
 public interface Panel {
 
-	Player holder();
+	Browser browser();
 
-	List<PanelExtension> extensions();
+	ButtonBuilder<?> buildButton();
 
-	void extend(PanelExtension extension);
-
-	Inventory build();
+	void open();
 
 }

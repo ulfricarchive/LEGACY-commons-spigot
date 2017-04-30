@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 
 import com.ulfric.commons.naming.Name;
 import com.ulfric.commons.service.Service;
+import com.ulfric.commons.spigot.panel.browser.Browser;
 import com.ulfric.commons.spigot.service.ServiceUtils;
 import com.ulfric.commons.version.Version;
 
