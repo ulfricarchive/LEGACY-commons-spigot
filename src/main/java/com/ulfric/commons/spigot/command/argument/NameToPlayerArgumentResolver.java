@@ -1,9 +1,9 @@
 package com.ulfric.commons.spigot.command.argument;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.ulfric.commons.spigot.command.Context;
+import com.ulfric.commons.spigot.player.PlayerUtils;
 
 public class NameToPlayerArgumentResolver implements ArgumentResolver<Player> {
 
@@ -11,7 +11,7 @@ public class NameToPlayerArgumentResolver implements ArgumentResolver<Player> {
 	public Player apply(Context context, String argument)
 	{
 		// TODO visibility / permission checks
-		return Bukkit.getPlayer(argument);
+		return PlayerUtils.getPlayer(argument);
 	}
 
 }
