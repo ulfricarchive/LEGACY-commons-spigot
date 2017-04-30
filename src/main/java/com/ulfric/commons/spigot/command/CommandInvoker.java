@@ -10,13 +10,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -62,19 +60,9 @@ final class CommandInvoker implements CommandExecutor {
 	private List<RuleEnforcement> rules()
 	{
 		List<Annotation> annotations = AnnotationUtils.getLeafAnnotations(this.command, Rule.class);
-		annotations.addAll(AnnotationUtils.getLeafAnnotations(this.command, Rules.class));
-
-		if (annotations.isEmpty())
-		{
-			return Collections.emptyList();
-		}
 
 		return annotations.stream()
-				.map(annotation -> ArrayUtils.addAll(
-						annotation.annotationType().getAnnotationsByType(Rule.class),
-						Optional.ofNullable(annotation.annotationType().getAnnotation(Rules.class))
-								.map(Rules::value).orElse(new Rule[0])
-				))
+				.map(annotation -> annotation.annotationType().getAnnotationsByType(Rule.class))
 				.flatMap(Stream::of)
 				.map(Rule::value)
 				.distinct()
