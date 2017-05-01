@@ -26,7 +26,7 @@ public interface Text extends Service {
 			return;
 		}
 
-		target.sendMessage(this.getLegacyMessage(target, code, metadata));
+		target.sendMessage(this.getPlainMessage(target, code, metadata));
 	}
 
 	default void sendMessage(CommandSender target, String code)
@@ -37,34 +37,20 @@ public interface Text extends Service {
 			return;
 		}
 
-		target.sendMessage(this.getLegacyMessage(target, code));
+		target.sendMessage(this.getPlainMessage(target, code));
 	}
 
-	default void sendMessage(Player target, String code, String... metadata)
-	{
-		target.sendRawMessage(this.getRawMessage(target, code, metadata));
-	}
+	void sendMessage(Player target, String code, String... metadata);
 
-	default void sendMessage(Player target, String code)
-	{
-		target.sendRawMessage(this.getRawMessage(target, code));
-	}
+	void sendMessage(Player target, String code);
 
-	String getRawMessage(CommandSender target, String code, String... metadata);
+	String getPlainMessage(CommandSender target, String code, String... metadata);
 
-	String getLegacyMessage(CommandSender target, String code, String... metadata);
+	String getPlainMessage(CommandSender target, String code);
 
-	String getRawMessage(CommandSender target, String code);
+	String getPlainMessage(String code, String... metadata);
 
-	String getLegacyMessage(CommandSender target, String code);
-
-	String getRawMessage(String code, String... metadata);
-
-	String getLegacyMessage(String code, String... metadata);
-
-	String getRawMessage(String code);
-
-	String getLegacyMessage(String code);
+	String getPlainMessage(String code);
 
 	void registerPlaceholder(Placeholder placeholder);
 
