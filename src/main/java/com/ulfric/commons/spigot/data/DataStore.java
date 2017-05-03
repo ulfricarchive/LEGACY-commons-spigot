@@ -11,5 +11,10 @@ public interface DataStore {
 	Stream<PersistentData> loadAllData();
 
 	DataStore getDataStore(String name);
+	
+	default DataStore getDefault()
+	{
+		return this.getDataStore("config");
+	}
 
 }

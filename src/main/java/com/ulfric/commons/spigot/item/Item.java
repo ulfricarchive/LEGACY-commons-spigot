@@ -1,6 +1,5 @@
 package com.ulfric.commons.spigot.item;
 
-import com.ulfric.commons.bean.Bean;
 import com.ulfric.commons.spigot.text.ChatUtils;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -14,7 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public final class Item extends Bean {
+public final class Item {
 	
 	public static Builder builder()
 	{
