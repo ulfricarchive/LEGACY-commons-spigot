@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +92,11 @@ public final class Item extends Bean {
 		{
 			this.lore = lore;
 			return this;
+		}
+		
+		public Builder setLore(String... lore)
+		{
+			return this.setLore(Arrays.asList(lore));
 		}
 		
 		public Builder colorize()
