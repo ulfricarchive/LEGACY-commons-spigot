@@ -20,7 +20,7 @@ public final class Item extends Bean {
 		return new Builder();
 	}
 	
-	private static final class Builder implements org.apache.commons.lang3.builder.Builder<Item>
+	public static final class Builder implements org.apache.commons.lang3.builder.Builder<Item>
 	{
 		
 		private MaterialType type;
