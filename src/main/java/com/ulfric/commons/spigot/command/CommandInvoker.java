@@ -141,7 +141,7 @@ final class CommandInvoker implements CommandExecutor {
 		catch (ArgumentRequiredException argumentRequired)
 		{
 			Text.getService().sendMessage(sender, argumentRequired.getMessage(),
-					MetadataDefaults.PERMISSION_FAILED, argumentRequired.getDetail());
+					MetadataDefaults.ARGUMENT_FAILED, argumentRequired.getDetail());
 		}
 		catch (Exception ignore)
 		{
