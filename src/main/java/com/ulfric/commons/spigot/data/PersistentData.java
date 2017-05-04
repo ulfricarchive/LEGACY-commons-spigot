@@ -12,6 +12,9 @@ import com.ulfric.commons.naming.Named;
 
 public interface PersistentData extends Named, Persistent {
 
+	@Override
+	String getName();
+
 	void set(String path, Object value);
 
 	Object getObject(String path);

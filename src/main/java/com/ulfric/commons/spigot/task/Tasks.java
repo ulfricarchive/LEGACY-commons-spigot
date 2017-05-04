@@ -12,11 +12,6 @@ public enum Tasks {
 
 	;
 
-	public static long secondsToTicks(int seconds)
-	{
-		return seconds * 20;
-	}
-
 	public static Task runSync(Runnable runnable)
 	{
 		return Tasks.runLater(runnable, 0L);

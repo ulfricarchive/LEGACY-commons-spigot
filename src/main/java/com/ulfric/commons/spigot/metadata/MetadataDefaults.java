@@ -27,6 +27,8 @@ public class MetadataDefaults {
 	public static final String PUNISHMENT_REASON = "PunishmentReason";
 	public static final String PUNISHMENT_BEGINNING = "PunishmentBeginning";
 	public static final String PUNISHMENT_EXPIRY = "PunishmentExpiry";
+	public static final String LAST_WARP = "LastWarp";
+	public static final String TELEPORT_DELAY = "TeleportDelay";
 
 	private MetadataDefaults()
 	{
