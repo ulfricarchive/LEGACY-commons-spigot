@@ -128,10 +128,20 @@ final class CommandInvoker implements CommandExecutor {
 			Context context = this.createContext(sender, command, label, arguments);
 			this.handleCommand(context, new ArrayList<>(context.getArguments()));
 		}
-		catch (RuleNotPassedException exception)
+		catch (RuleNotPassedException ruleNotPassed)
 		{
-			Metadata.write(sender, "rule-failed", exception.getDetail());
-			Text.getService().sendMessage(sender, exception.getMessage());
+			Text.getService().sendMessage(sender, ruleNotPassed.getMessage(),
+					MetadataDefaults.RULE_FAILED, ruleNotPassed.getDetail());
+		}
+		catch (PermissionRequiredException permissionRequired)
+		{
+			Text.getService().sendMessage(sender, permissionRequired.getMessage(),
+					MetadataDefaults.PERMISSION_FAILED, permissionRequired.getDetail());
+		}
+		catch (ArgumentRequiredException argumentRequired)
+		{
+			Text.getService().sendMessage(sender, argumentRequired.getMessage(),
+					MetadataDefaults.PERMISSION_FAILED, argumentRequired.getDetail());
 		}
 		catch (Exception ignore)
 		{

@@ -2,6 +2,9 @@ package com.ulfric.commons.spigot.metadata;
 
 public class MetadataDefaults {
 
+	public static final String RULE_FAILED = "RuleFailed";
+	public static final String PERMISSION_FAILED = "PermissionFailed";
+	public static final String ARGUMENT_FAILED = "ArgumentFailed";
 	public static final String LAST_TARGETED_BY = "LastTargetedBy";
 	public static final String LAST_PERMISSION_TOUCH = "LastPermissionTouch";
 	public static final String LAST_PERMISSION_TOUCH_NODE = "LastPermissionTouchNode";
