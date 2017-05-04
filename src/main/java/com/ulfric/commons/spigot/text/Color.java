@@ -18,9 +18,9 @@ public interface Color extends Service {
 
 	String primary(CommandSender sender);
 
-	String secondary(CommandSender sender);
+	String detail(CommandSender sender);
 
-	String tertiary(CommandSender sender);
+	String button(CommandSender sender);
 
 	String warning(CommandSender sender);
 

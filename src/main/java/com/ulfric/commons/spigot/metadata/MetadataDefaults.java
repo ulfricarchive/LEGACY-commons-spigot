@@ -23,6 +23,7 @@ public class MetadataDefaults {
 	public static final String LAST_MESSAGE_REPLY_RECEIVER = "LastMessageReplyReceiver";
 	public static final String NO_PERMISSION = "NoPermission";
 	public static final String PUNISHMENT_ID = "PunishmentId";
+	public static final String PUNISHMENT_PUNISHED = "PunishmentPunished";
 	public static final String PUNISHMENT_PUNISHER = "PunishmentPunisher";
 	public static final String PUNISHMENT_REASON = "PunishmentReason";
 	public static final String PUNISHMENT_BEGINNING = "PunishmentBeginning";

@@ -8,7 +8,7 @@ public enum ChatUtils {
 
 	public static String format(String text)
 	{
-		return ChatColor.translateAlternateColorCodes('&', text);
+		return ChatColor.translateAlternateColorCodes('&', text).replace("\\n", "\n");
 	}
 
 }
