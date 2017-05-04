@@ -11,4 +11,9 @@ public enum TickUtils {
 		return TickUtils.TICKS_PER_SECOND * seconds;
 	}
 
+	public static long secondsFromTicks(long ticks)
+	{
+		return ticks / TickUtils.TICKS_PER_SECOND;
+	}
+
 }
