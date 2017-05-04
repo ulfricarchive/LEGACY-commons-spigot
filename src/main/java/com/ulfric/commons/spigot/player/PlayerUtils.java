@@ -4,7 +4,10 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Tameable;
 
 import com.ulfric.commons.identity.UniqueIdUtils;
 
@@ -66,6 +69,48 @@ public enum PlayerUtils {
 	public static boolean hasPlayedBefore(OfflinePlayer player)
 	{
 		return player.hasPlayedBefore() || player.isOnline();
+	}
+
+	public static Player getPlayerCause(Object object)
+	{
+		if (object == null)
+		{
+			return null;
+		}
+
+		// TODO Conversion service
+		if (object instanceof Player)
+		{
+			return (Player) object;
+		}
+
+		if (object instanceof UUID)
+		{
+			return Bukkit.getPlayer((UUID) object);
+		}
+
+		if (object instanceof AnimalTamer)
+		{
+			AnimalTamer tamer = (AnimalTamer) object;
+
+			return PlayerUtils.getPlayerCause(tamer.getUniqueId());
+		}
+
+		if (object instanceof Tameable)
+		{
+			Tameable tamed = (Tameable) object;
+
+			return PlayerUtils.getPlayerCause(tamed.getOwner());
+		}
+
+		if (object instanceof Projectile)
+		{
+			Projectile projectile = (Projectile) object;
+
+			return PlayerUtils.getPlayerCause(projectile.getShooter());
+		}
+
+		return null;
 	}
 
 }

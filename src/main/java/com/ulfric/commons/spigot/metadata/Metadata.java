@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
 public enum Metadata {
 
@@ -42,21 +41,24 @@ public enum Metadata {
 		return data.remove(key);
 	}
 
-	public static Object read(Entity holder, String key)
+	public static Object delete(Object holder, String key, Object value)
+	{
+		Map<String, Object> data = Metadata.getHolderOrNull(holder);
+		if (data == null)
+		{
+			return null;
+		}
+		return data.remove(key, value);
+	}
+
+	public static Object read(Object holder, String key)
 	{
 		Map<String, Object> data = Metadata.getOrCreateHolder(holder);
 
 		return data.get(key);
 	}
 
-	public static Object read(CommandSender holder, String key)
-	{
-		Map<String, Object> data = Metadata.getOrCreateHolder(holder);
-
-		return data.get(key);
-	}
-
-	public static String readString(Player holder, String key)
+	public static String readString(Object holder, String key)
 	{
 		Object value = Metadata.read(holder, key);
 
@@ -68,16 +70,11 @@ public enum Metadata {
 		return null;
 	}
 
-	public static String readString(CommandSender holder, String key)
+	public static boolean isPresent(Object holder, String key)
 	{
-		Object value = Metadata.read(holder, key);
+		Map<String, Object> data = Metadata.getHolderOrNull(holder);
 
-		if (value instanceof String)
-		{
-			return (String) value;
-		}
-
-		return null;
+		return data != null && data.get(key) != null;
 	}
 
 	private static Map<String, Object> getOrCreateHolder(Object holder)

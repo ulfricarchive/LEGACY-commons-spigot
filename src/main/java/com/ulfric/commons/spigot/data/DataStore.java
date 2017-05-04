@@ -12,9 +12,9 @@ public interface DataStore {
 
 	DataStore getDataStore(String name);
 	
-	default DataStore getDefault()
+	default PersistentData getDefault()
 	{
-		return this.getDataStore("config");
+		return this.getData("config");
 	}
 
 }

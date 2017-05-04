@@ -135,7 +135,7 @@ final class CommandInvoker implements CommandExecutor {
 		}
 		catch (Exception ignore)
 		{
-			// TODO
+			// TODO handle exception
 			ignore.printStackTrace();
 		}
 		return true;
@@ -161,9 +161,29 @@ final class CommandInvoker implements CommandExecutor {
 		Command command = InstanceUtils.createOrNull(this.command);
 
 		// TODO allow arguments to contest each other for the best match
-		for (Field argument : this.arguments) arguments:
+		arguments: for (Field argument : this.arguments)
 		{
 			Argument argumentDefinition = argument.getAnnotation(Argument.class);
+
+			Permission permission = argument.getAnnotation(Permission.class);
+			if (permission != null)
+			{
+				CommandSender sender = context.getSender();
+				for (String node : permission.value())
+				{
+					if (sender.hasPermission(node))
+					{
+						continue;
+					}
+
+					if (argumentDefinition.optional())
+					{
+						continue arguments;
+					}
+
+					throw new PermissionRequiredException(node);
+				}
+			}
 
 			Iterator<String> arguments = remainingArguments.iterator();
 			while (arguments.hasNext())
@@ -173,7 +193,7 @@ final class CommandInvoker implements CommandExecutor {
 				{
 					Try.to(() -> argument.set(command, pojoArgument));
 					arguments.remove();
-					break arguments;
+					continue arguments;
 				}
 			}
 

@@ -43,6 +43,8 @@ public interface PersistentData extends Named, Persistent {
 
 	long getLong(String path);
 
+	long getLong(String path, long defaultValue);
+
 	boolean getBoolean(String path);
 
 	Set<String> getKeys();
