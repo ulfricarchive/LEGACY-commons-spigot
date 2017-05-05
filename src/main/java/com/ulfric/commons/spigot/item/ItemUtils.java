@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.ulfric.commons.spigot.item.parts.ItemParts;
+
 public enum ItemUtils {
 
 	;
@@ -31,6 +33,16 @@ public enum ItemUtils {
 
 			world.dropItem(location, leftover);
 		});
+	}
+
+	public static String serialize(ItemStack item)
+	{
+		return ItemParts.serialize(item);
+	}
+
+	public static ItemStack deserializeItem(String string)
+	{
+		return ItemParts.deserialize(string);
 	}
 
 }
