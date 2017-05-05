@@ -15,8 +15,10 @@ import com.google.common.base.Joiner;
 public enum ItemParts {
 
 	TYPE(ItemTypePart.INSTANCE),
-	DATA(ItemDurabilityPart.INSTANCE),
-	AMOUNT(ItemDurabilityPart.INSTANCE);
+	DURABILITY(ItemDurabilityPart.INSTANCE),
+	AMOUNT(ItemDurabilityPart.INSTANCE),
+	NAME(ItemNamePart.INSTANCE),
+	LORE(ItemLorePart.INSTANCE);
 
 	private static final Pattern WHITESPACE = Pattern.compile("\\s+");
 	public static final Pattern EQUALS = Pattern.compile("=");
