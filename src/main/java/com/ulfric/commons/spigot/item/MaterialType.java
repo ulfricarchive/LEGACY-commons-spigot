@@ -28,11 +28,13 @@ public final class MaterialType extends Bean {
 				MaterialType.CACHE.computeIfAbsent(material, ignore -> new TShortObjectHashMap<>());
 
 		MaterialType type = dataToType.get(data);
+
 		if (type == null)
 		{
 			type = new MaterialType(material, data);
 			dataToType.put(data, type);
 		}
+
 		return type;
 	}
 
