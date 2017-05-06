@@ -3,6 +3,7 @@ package com.ulfric.commons.spigot.block;
 import com.ulfric.commons.spigot.event.Events;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 
@@ -46,6 +47,20 @@ public enum BlockUtils {
 	public static Set<Block> getBlocks(Location origin, int radius)
 	{
 		return BlockUtils.getBlocks(origin.getBlock(), radius);
+	}
+	
+	public static Set<Block> getBlocksInDirection(Block origin, BlockFace direction, int amount)
+	{
+		Set<Block> blocks = new HashSet<>();
+		
+		for (int i = amount; i > 0; i--)
+		{
+			Block current = origin.getRelative(direction);
+			blocks.add(current);
+			origin = current;
+		}
+				
+		return blocks;
 	}
 	
 }
