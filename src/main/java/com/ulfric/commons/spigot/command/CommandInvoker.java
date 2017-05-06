@@ -212,10 +212,20 @@ final class CommandInvoker implements CommandExecutor {
 				continue;
 			}
 
-			throw new ArgumentRequiredException(argument.getName());
+			throw new ArgumentRequiredException(this.getLabel(context.getSender(), argument));
 		}
 
 		return command;
+	}
+
+	private String getLabel(CommandSender sender, Field argument)
+	{
+		String label = argument.getName();
+		if (sender.hasPermission("commands-see-types"))
+		{
+			return label + " (" + argument.getType().getSimpleName() + ")";
+		}
+		return label;
 	}
 
 	private CommandInvoker getSubCommand(List<String> remainingArguments)
