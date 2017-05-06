@@ -22,7 +22,6 @@ public enum BlockUtils {
 	public static Set<Block> getBlocks(Block origin, int radius)
 	{
 		Set<Block> blocks = new HashSet<>();
-		blocks.add(origin);
 		
 		int originX = origin.getX();
 		int originY = origin.getY();
