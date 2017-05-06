@@ -26,4 +26,11 @@ public enum PointUtils {
 		return new Location(world, point.getX(), point.getY(), point.getZ());
 	}
 
+	public static Point multiply(Point point, Vector vector)
+	{
+		return Point.builder().setX((int) (point.getX() * vector.getX()))
+				.setY((int) (point.getY() * vector.getY())).setZ((int) (point.getZ() * vector.getZ()))
+				.build();
+	}
+
 }
