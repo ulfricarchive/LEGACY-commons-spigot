@@ -19,7 +19,7 @@ public enum BlockUtils {
 		return Events.fire(new BlockBreakEvent(block, player)).isCancelled();
 	}
 	
-	public static Set<Block> getBlocks(Block origin, int radius)
+	public static Set<Block> getBlocksWithinRadius(Block origin, int radius)
 	{
 		Set<Block> blocks = new HashSet<>();
 		
@@ -43,9 +43,9 @@ public enum BlockUtils {
 		return blocks;
 	}
 	
-	public static Set<Block> getBlocks(Location origin, int radius)
+	public static Set<Block> getBlocksWithinRadius(Location origin, int radius)
 	{
-		return BlockUtils.getBlocks(origin.getBlock(), radius);
+		return BlockUtils.getBlocksWithinRadius(origin.getBlock(), radius);
 	}
 	
 	public static Set<Block> getBlocksInDirection(Block origin, BlockFace direction, int amount)
