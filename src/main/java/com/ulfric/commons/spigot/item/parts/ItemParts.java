@@ -18,7 +18,10 @@ public enum ItemParts {
 	DURABILITY(ItemDurabilityPart.INSTANCE),
 	AMOUNT(ItemDurabilityPart.INSTANCE),
 	NAME(ItemNamePart.INSTANCE),
-	LORE(ItemLorePart.INSTANCE);
+	LORE(ItemLorePart.INSTANCE),
+	FLAG(ItemFlagPart.INSTANCE),
+	ENCHANTMENT(ItemEnchantmentPart.INSTANCE),
+	SKULL_OWNER(ItemSkullOwnerPart.INSTANCE);
 
 	private static final Pattern WHITESPACE = Pattern.compile("\\s+");
 	public static final Pattern EQUALS = Pattern.compile("=");
