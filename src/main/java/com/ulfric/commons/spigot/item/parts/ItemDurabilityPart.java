@@ -2,7 +2,6 @@ package com.ulfric.commons.spigot.item.parts;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 
 import com.ulfric.commons.naming.Name;
 
@@ -20,7 +19,7 @@ enum ItemDurabilityPart implements ItemPart {
 	@Override
 	public ItemMeta deserialize(ItemStack item, ItemMeta meta, String value)
 	{
-		item.setData(new MaterialData(item.getType(), Byte.parseByte(value)));
+		item.setDurability(Short.parseShort(value));
 
 		return meta;
 	}
