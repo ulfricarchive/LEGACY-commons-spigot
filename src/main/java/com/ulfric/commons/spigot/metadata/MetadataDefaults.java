@@ -30,7 +30,10 @@ public class MetadataDefaults {
 	public static final String PUNISHMENT_EXPIRY = "PunishmentExpiry";
 	public static final String LAST_WARP = "LastWarp";
 	public static final String TELEPORT_DELAY = "TeleportDelay";
-
+	public static final String LAST_HOME_TELEPORT = "LastHomeTeleport";
+	public static final String LAST_HOME_SET = "LastHomeSet";
+	public static final String LAST_HOME_DELETED = "LastHomeDeleted";
+			
 	private MetadataDefaults()
 	{
 		throw new IllegalStateException();
