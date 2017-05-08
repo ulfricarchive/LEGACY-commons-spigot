@@ -21,6 +21,8 @@ public interface PersistentData extends Named, Persistent {
 
 	PersistentData getSection(String path);
 
+	PersistentData createSection(String key);
+
 	default List<PersistentData> getSections()
 	{
 		return this.getKeys().stream()
@@ -51,5 +53,7 @@ public interface PersistentData extends Named, Persistent {
 	boolean getBoolean(String path);
 
 	Set<String> getKeys();
+
+	boolean contains(String key);
 
 }
