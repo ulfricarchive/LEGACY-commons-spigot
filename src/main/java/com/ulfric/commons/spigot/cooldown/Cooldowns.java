@@ -18,4 +18,6 @@ public interface Cooldowns extends Service {
 	
 	CooldownAccount getAccount(UUID uniqueId);
 	
+	CooldownAccount getGlobalAccount();
+	
 }
