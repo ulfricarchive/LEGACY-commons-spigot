@@ -1,10 +1,10 @@
 package com.ulfric.commons.spigot.cooldown;
 
-import com.ulfric.commons.bean.Bean;
-
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
+
+import com.ulfric.commons.bean.Bean;
 
 public final class Cooldown extends Bean {
 	
@@ -102,12 +102,12 @@ public final class Cooldown extends Bean {
 	
 	public Instant getRemaining()
 	{
-		return Instant.now().minusMillis(this.getExpiry().toEpochMilli());
+		return this.getExpiry().minusMillis(Instant.now().toEpochMilli());
 	}
 	
 	public boolean isExpired()
 	{
-		return this.getExpiry().isAfter(Instant.now());
+		return Instant.now().isAfter(this.getExpiry());
 	}
 	
 }
