@@ -1,6 +1,6 @@
 package com.ulfric.commons.spigot.warp;
 
-import java.util.List;
+import java.util.UUID;
 
 import com.ulfric.commons.naming.Name;
 import com.ulfric.commons.service.Service;
@@ -16,12 +16,8 @@ public interface Warps extends Service {
 		return ServiceUtils.getService(Warps.class);
 	}
 
-	void setWarp(Warp warp);
+	WarpAccount getGlobalAccount();
 
-	void deleteWarp(String name);
-
-	Warp getWarp(String name);
-
-	List<Warp> getWarps();
+	WarpAccount getAccount(UUID uniqueId);
 
 }
