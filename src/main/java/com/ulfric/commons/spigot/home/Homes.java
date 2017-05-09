@@ -10,12 +10,12 @@ import java.util.UUID;
 @Name("homes")
 @Version(1)
 public interface Homes extends Service {
-	
+
 	public static Homes getHomes()
 	{
 		return ServiceUtils.getService(Homes.class);
 	}
-	
+
 	HomeAccount getAccount(UUID uniqueId);
-	
+
 }
